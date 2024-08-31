@@ -1,0 +1,17 @@
+! Test template to view a dictionary named config
+# This template expects a dictionary and
+# print out each key value pair
+
+{% for key, val in config.items() %}
+Key: {{ key }}
+  Value: {{ val }}
+{% endfor %}
+
+! RAW Variable
+{{ config }}
+
+{{ config['hostname']|title }}
+{{ config['hostname']|upper }}
+
+
+{{ config['fqdn']|title }}
