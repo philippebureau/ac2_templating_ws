@@ -1,0 +1,8 @@
+! Test template to iterate over a list
+# This template expects a list variable mylistvar and will simply iterate over the list passed and
+# print out each element preceded by a dash
+
+{% for line in mylistvar %}
+- {{ line }}
+{%- endfor -%}
+
