@@ -1,0 +1,33 @@
+# Installation Instructions and Details for {{ cfg['location'] }}
+
+## Site Type {{ cfg['loc_type']  }}
+
+___
+
+***Last Updated: {{ cfg['dattim'] }}***
+<br>
+Site Smarthands: {{ cfg['smart_hands'] }}
+<br>
+<br>![Appliance]({{ cfg['diagram'] }})
+<br>
+<br>
+| ITEM               | Value                     |
+|--------------------|---------------------------|
+| SITE TYPE              |   {{ cfg['loc_type'] }}   |
+| MODEL              |   {{ cfg['model'] }}   |
+| NZ GUARDIAN FQDN        |   {{ cfg['name'] }}    |
+| MGMT VLAN          |   {{ cfg['mgmt_vlan'] }}    |
+| NZ GURARDIAN IP       |   {{ cfg['mgmt_ip'] }} |
+| MGMT Subnet Gateway        |   {{ cfg['gateway_ip'] }}    |
+| MGMT Subnet Mask        |   {{ cfg['mgmt_mask'] }}  |
+| MGMT Subnet CIDR        |   {{ cfg['mgmt_cidr'] }}    |
+| MGMT Subnet Gateway Location       |   {{ cfg['mgt_gw'] }}    |
+| MGMT SWITCH         |   {{ cfg['local_tx_sw_name'] }}   |
+| SWITCH INTERFACE       |   {{cfg['local_tx_sw_int'] }}    |
+| SPAN VLAN RANGE        |   {{ cfg['span_vlan'] }}   |
+| SPAN INTERFACE        |   {{cfg['span_int'] }} on {{cfg['l3dev_name'] }}   |
+| NOTES       |   {{cfg['notes'] }}    |
+| Site Smart Hands       |   {{ cfg['smart_hands'] }}    |
+<br>
+---
+{{ cfg }}
