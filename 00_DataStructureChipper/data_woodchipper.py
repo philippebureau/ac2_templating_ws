@@ -15,13 +15,11 @@ __license__ = "Python"
 
 import solara
 from solara.components.file_drop import FileInfo
-from solara.website.utils import apidoc
 import pandas as pd
 import yaml
 import json
 import pathlib
 import textwrap
-from typing import List, cast
 import os
 import jinja2
 import random
@@ -30,13 +28,16 @@ import random
 # Declare reactive variables at the top level. Components using these variables
 # will be re-executed when their values change.
 
-# file_path = solara.reactive("")
-# df = solara.reactive(None)
-# selected_file = solara.reactive("")
-# file_content = solara.reactive("")
 data = solara.reactive("")
 filename = solara.reactive("")
 template_string = solara.reactive("")
+rendered_string = solara.reactive("")
+
+def save_file(fn, text):
+    with open(fn, "w") as f:
+        f.write(text)
+
+    return fn
 
 @solara.component
 def FilePicker(on_pick):
@@ -87,9 +88,23 @@ def SaveToFile():
 
 
 @solara.component
-def StateDisplay():
-    solara.Markdown("## Current State Values")
+def SaveRenderedToFile():
+    text = rendered_string.value
 
+    def save_to_file():
+        with open("rendered_template.txt", "w") as file:
+            file.write(text)
+
+    # solara.InputText(label="Enter text", value=text)
+    solara.Button("Save to file", on_click=save_to_file)
+
+@solara.component
+def StateDisplay():
+    """
+    Utility to display state for troubleshooting
+    :return:
+    """
+    solara.Markdown("## Current State Values")
     solara.Markdown(f"**data:** {data.value}")
 
 
@@ -156,9 +171,6 @@ def Page():
         image_folder_fp = os.path.join(os.getcwd(),"images")
         image_folder_path = pathlib.Path(image_folder_fp)
         png_files = list(image_folder_path.glob("*.png"))
-        # solara.Text(str(png_files))
-
-        # random_image = random.choice(png_files)
 
         # Specify the path to your local image
         # image_file = "openart-image_5IOK-dXK_1728224733825_raw.png"
@@ -174,14 +186,11 @@ def Page():
         template_str = ""
         FileLoadPage()
 
-
         # used to display Solara state
         #StateDisplay()
         loaded_data = data.value
 
         if loaded_data:
-
-            # solara.Text(f"Loaded data is of type {type(loaded_data)}")
 
             # Create two side-by-side areas
             with solara.Columns([1, 1]):
@@ -228,6 +237,18 @@ Rendering a single variable passed to the template called "loaded data"
                         template_str = """
 
 Raw data
+{{ loaded_data }}
+
+Iterating through list
+{% for item in loaded_data %}
+{{ item }}
+{% endfor %}
+
+                        """
+
+                        template_str_wrongvar = """
+
+Raw data
 {{ someother_variable }}
 
 Iterating through list
@@ -235,15 +256,9 @@ Iterating through list
 {{ item }}
 {% endfor %}
 
-                        """
+                       """
 
-                        # solara.Markdown(f"""
-                        # ```
-                        #
-                        # {template_str}
-                        #
-                        # """)
-
+                        # Display the template string
                         solara.Markdown(f"```bash\n{template_str}\n```")
 
                     if type(loaded_data) == dict:
@@ -262,13 +277,7 @@ Iterating through key, value pairs
 
                         """
 
-                        # solara.Markdown(f"""
-                        # ```
-                        #
-                        # {template_str}
-                        #
-                        # """)
-
+                        # Display the template string
                         solara.Markdown(f"```bash\n{template_str}\n```")
 
                     if template_str:
@@ -282,35 +291,12 @@ Iterating through key, value pairs
             template = jinja2.Template(template_str)
             rendered_output = template.render(loaded_data=loaded_data)
 
+            rendered_string.set(rendered_output)
+
+            # Display the rendered output
             solara.Markdown(f"```bash\n{rendered_output}\n```")
 
-
-
-@solara.component
-def load_file():
-    solara.Text("...Loading File")
-    try:
-        file_extension = file_path.value.split('.')[-1].lower()
-        # solara.Text(f"File: {file_path.name}")
-        # solara.Text(f"File: {file_path.FileInfo}")
-        solara.Text(dir(file_path))
-
-        if file_extension == 'csv':
-            df.set(pd.read_csv(file_path.value))
-        elif file_extension in ['yaml', 'yml']:
-            with open(file_path.value, 'r') as file:
-                data = yaml.safe_load(file)
-            df.set(pd.DataFrame(data))
-        elif file_extension == 'json':
-            with open(file_path.value, 'r') as file:
-                data = json.load(file)
-            df.set(pd.json_normalize(data))
-        else:
-            solara.Error("Unsupported file format. Please use CSV, YAML, or JSON.")
-    except Exception as e:
-        solara.Error(f"Error loading file: {str(e)}")
-
-
+            SaveRenderedToFile()
 
 
 # The following line is required only when running the code in a Jupyter notebook:

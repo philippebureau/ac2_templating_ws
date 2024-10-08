@@ -16,10 +16,16 @@ This variable in the pyhon script can be a
 - a dictionary
 - a complex data structure
 
-The data_woodchipper.py App tests 
+The data_woodchipper.py App illustrates data structures and their display in corresponding Jinja2 templates.
 
 ### Starting the App
 Change into the 00_DataStructureChipper directory.
 ```bash
 solara run data_woodchipper.py
 ```
+
+When the web page comes up, a list of available files comes up.  These files contain various types of data structures.
+
+Click on one to select it and the right side of the center pane will show the data itself and its type.
+The left side of the center pane will show the corresponding template derived from the data type.
+The bottom part of the center pane will show the rendered template.
