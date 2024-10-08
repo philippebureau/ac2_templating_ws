@@ -29,3 +29,9 @@ When the web page comes up, a list of available files comes up.  These files con
 Click on one to select it and the right side of the center pane will show the data itself and its type.
 The left side of the center pane will show the corresponding template derived from the data type.
 The bottom part of the center pane will show the rendered template.
+
+---
+
+#### Modules 
+- jinja2
+- solara
