@@ -1,4 +1,9 @@
+__pycache__
 .idea/
-.DS_Store
+*.DS_Store
 *.md
-
+*venv*
+*.jpg
+*.png
+test
+AutoCon2 alias
