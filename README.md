@@ -3,9 +3,9 @@
 Proctor: Claudia de Luna, EIA
 
 Teaching Assistants:
-Mike Lester
+- Mike Lester (EIA)
 
-Lucas Boyd
+- Lucas Boyd (Former EIA)
 
 
 Description: Using templates to create network docs & configurations programmatically is key to any automation strategy; we will generate a wide range of artifacts using Jinja templates.
