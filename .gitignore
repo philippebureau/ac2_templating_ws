@@ -5,7 +5,7 @@ __pycache__
 *venv*
 *.jpg
 *.png
-test
+*test*
 *alias*
 *.txt
 *.zip
@@ -13,3 +13,7 @@ test
 zArchive
 xArchive
 cisco
+*.html
+*.docx
+*.fld/
+*.pdf
