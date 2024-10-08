@@ -190,10 +190,22 @@ def Page():
         #StateDisplay()
         loaded_data = data.value
 
-        if loaded_data:
+        if isinstance(loaded_data, pd.DataFrame):
+            solara.Text("Matched Dataframe")
+            if loaded_data.empty:
+                there_is_data = False
+            else:
+                there_is_data = True
+        elif loaded_data:
+            there_is_data = True
+        else:
+            there_is_data = False
+
+        if there_is_data:
 
             # Create two side-by-side areas
             with solara.Columns([1, 1]):
+                # ----------------------------------------------------------------------------------------------------
                 # First column
                 with solara.Card("Data"):
                     solara.Markdown("---")
@@ -213,7 +225,11 @@ def Page():
                         solara.Text("Dictionary")
                         solara.Text(str(loaded_data))
 
+                    if isinstance(loaded_data, pd.DataFrame):
+                        solara.Text("DataFrame")
+                        solara.DataFrame(loaded_data)
 
+                # ----------------------------------------------------------------------------------------------------
                 # Second column
                 with solara.Card("Jinja2 Template"):
                     solara.Markdown("---")
@@ -280,9 +296,34 @@ Iterating through key, value pairs
                         # Display the template string
                         solara.Markdown(f"```bash\n{template_str}\n```")
 
+                    if isinstance(loaded_data, pd.DataFrame):
+                        # Conver to list
+                        converted_loaded_data = loaded_data.values.tolist()
+                        lod = loaded_data.to_dict("records")
+                        loaded_data = lod
+                        template_str = """
+
+Raw data
+{{ loaded_data }}
+
+Iterating through list (formerly a dataframe)
+{% for item in loaded_data %}
+{{ item }}
+{% endfor %}
+
+                        """
+
+                        print(converted_loaded_data)
+                        print(lod)
+
+                        # Display the template string
+                        solara.Markdown(f"```bash\n{template_str}\n```")
+
                     if template_str:
                         template_string.set(template_str)
                         SaveToFile()
+
+
 
 
             # Content below the side-by-side areas
