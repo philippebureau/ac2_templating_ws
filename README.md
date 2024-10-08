@@ -46,3 +46,15 @@ This project also illustrates how passing each variable can become too complex. 
 This mini-project will illustrate how to use a Jinja2 template to produce detailed work instructions or procedures for a specific task. 
 
 In this project, we will use a local YAML file to store the design data required.  Based on the design data, the script will produce a specific Markdown document with all the details required for a "smart-hands" technician to perform the installation work.
+
+
+---
+#### Modules
+pip uninstall -r requirements.txt -y
+pip install jinja2
+pip install solara
+pip install black
+pip install pyyaml
+pip install pandas
+pip instlal diagrams
+pip install diagrams
