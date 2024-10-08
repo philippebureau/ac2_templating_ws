@@ -62,6 +62,4 @@ pip install pyyaml
 
 pip install pandas
 
-pip instlal diagrams
-
 pip install diagrams
