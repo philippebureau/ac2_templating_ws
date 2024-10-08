@@ -15,6 +15,7 @@ __license__ = "Python"
 import argparse
 import re
 import yaml
+import json
 import jinja2
 
 
@@ -30,6 +31,21 @@ def is_user_intf(intf):
         return True
     else:
         return False
+
+
+def load_json(filename):
+
+    try:
+        with open(filename, 'r') as file:
+            data = json.load(file)
+        return data
+    except FileNotFoundError:
+        print(f"Error: File '{filename}' not found.")
+    except json.JSONDecodeError as e:
+        print(f"Error: Invalid JSON format in '{filename}'. {str(e)}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {str(e)}")
+    return None
 
 
 def load_yaml(filename):
@@ -103,7 +119,7 @@ def jenv_filesystem(search_dir="templates", line_comment="#"):
     return env
 
 
-def load_jtemplate(jenv_obj, template_file_name="test_list.j2"):
+def load_jtemplate(jenv_obj, template_file_name):
     """
     This function takes two arguments:
     1. A Jinja2 Environment Object
@@ -117,7 +133,7 @@ def load_jtemplate(jenv_obj, template_file_name="test_list.j2"):
     try:
         template_obj = jenv_obj.get_template(template_file_name)
     except jinja2.exceptions.TemplateNotFound as fn:
-        print(f"ERROR: Template {fn} not found!")
+        print(f"ERROR: Template {template_file_name} not found!")
         print(f"Available Templates in the Environment are:")
         for line in jenv_obj.list_templates():
             print(f"\t- {line}")
