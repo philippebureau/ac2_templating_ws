@@ -51,10 +51,17 @@ In this project, we will use a local YAML file to store the design data required
 ---
 #### Modules
 pip uninstall -r requirements.txt -y
+
 pip install jinja2
+
 pip install solara
+
 pip install black
+
 pip install pyyaml
+
 pip install pandas
+
 pip instlal diagrams
+
 pip install diagrams
