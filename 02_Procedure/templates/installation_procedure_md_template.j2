@@ -6,28 +6,31 @@ ___
 
 ***Last Updated: {{ cfg['dattim'] }}***
 <br>
-Site Smarthands: {{ cfg['smart_hands'] }}
+Smarthands at {{ cfg['location'] }}: {{ cfg['smart_hands'] }}
 <br>
 <br>![Appliance]({{ cfg['diagram'] }})
 <br>
 <br>
 | ITEM               | Value                     |
 |--------------------|---------------------------|
-| SITE TYPE              |   {{ cfg['loc_type'] }}   |
+| LOCATION TYPE              |   {{ cfg['loc_type'] }}   |
 | MODEL              |   {{ cfg['model'] }}   |
-| NZ GUARDIAN FQDN        |   {{ cfg['name'] }}    |
+| APPLIANCE FQDN        |   {{ cfg['name'] }}    |
+| APPLIANCE IP       |   {{ cfg['mgmt_ip'] }} |
 | MGMT VLAN          |   {{ cfg['mgmt_vlan'] }}    |
-| NZ GURARDIAN IP       |   {{ cfg['mgmt_ip'] }} |
 | MGMT Subnet Gateway        |   {{ cfg['gateway_ip'] }}    |
 | MGMT Subnet Mask        |   {{ cfg['mgmt_mask'] }}  |
 | MGMT Subnet CIDR        |   {{ cfg['mgmt_cidr'] }}    |
 | MGMT Subnet Gateway Location       |   {{ cfg['mgt_gw'] }}    |
-| MGMT SWITCH         |   {{ cfg['local_tx_sw_name'] }}   |
-| SWITCH INTERFACE       |   {{cfg['local_tx_sw_int'] }}    |
-| SPAN VLAN RANGE        |   {{ cfg['span_vlan'] }}   |
+| MGMT SWITCH         |   {{ cfg['mgmt_sw'] }}   |
+| SWITCH INTERFACE       |   {{cfg['mgmt_int'] }}    |
+| SPAN VLAN RANGE        |   {{ cfg['rspan_range'] }}   |
 | SPAN INTERFACE        |   {{cfg['span_int'] }} on {{cfg['l3dev_name'] }}   |
 | NOTES       |   {{cfg['notes'] }}    |
-| Site Smart Hands       |   {{ cfg['smart_hands'] }}    |
+| Recommended Install RU       |   {{cfg['ru'] }}    |
+| Smart Hands Name      |   {{ cfg['smart_hands'] }}    |
+| Smart Hands Email      |   {{ cfg['sh_email'] }}    |
+| Smart Hands Phone      |   {{ cfg['sh_mobile'] }}    |
 <br>
 ---
 {{ cfg }}

@@ -37,25 +37,33 @@ def main():
     # Format as human-readable string
     human_readable = datetime.datetime.now().strftime("%B %d, %Y at %I:%M %p")
 
+    # ----------------------------------------------------------------------------------------------------------
     # Load the installation details YAML file
     payload_dict = utils.load_yaml("installation_details.yml")
     print("YAML File Contents")
     pprint.pprint(payload_dict)
+    # ----------------------------------------------------------------------------------------------------------
 
+    # ----------------------------------------------------------------------------------------------------------
     # Select Image
+    # This sets the image we will use in the document
     if re.search(r"600", payload_dict['model']):
         img = os.path.join(".", "images", "ORDR_S600_Sensor.jpg")
     elif re.search(r"2000", payload_dict['model']):
         img = os.path.join(".", "images", "ORDR_S2000_Sensor.jpg")
     else:
         img = os.path.join(".", "images", "istockphoto-519363862-612x612.jpeg")
+
+    # Here we are adding the appropriate diagram image to the payload dictionary
     payload_dict.update({"diagram": img})
 
-    # Create the payload dictionary we will send to the template
+    # Update the payload dictionary we will send to the template with the human readable timestamp
     payload_dict.update({"dattim": human_readable})
 
     # TODO: Calculate configuration parameters from subnet
 
+
+    # ----------------------------------------------------------------------------------------------------------
     # CREATE JINJA2 TEMPLATE ENVIRONMENT
     # Note: in the jenv_filesystem function the default line comment is #
     #       Because # is part of the Markdown syntax we need to use something else if we
