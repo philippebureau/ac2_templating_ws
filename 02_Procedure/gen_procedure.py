@@ -19,6 +19,7 @@ import re
 import datetime
 import pprint
 
+
 # This is necessary because I want to import functions in a file called utils.py and that file is one level up
 # from here
 # Get the absolute path of the top level main repository
@@ -39,7 +40,7 @@ def main():
 
     # ----------------------------------------------------------------------------------------------------------
     # Load the installation details YAML file
-    payload_dict = utils.load_yaml("installation_details.yml")
+    payload_dict = utils.load_yaml(arguments.payload_file)
     print("YAML File Contents")
     pprint.pprint(payload_dict)
     # ----------------------------------------------------------------------------------------------------------
@@ -62,6 +63,15 @@ def main():
 
     # TODO: Calculate configuration parameters from subnet
 
+    # Get Gateway
+    payload_dict.update({"mgmt_gw": utils.get_first_ip(payload_dict['mgmt_subnet'])})
+
+    # Get Mask in dotted notation
+    mgmt_mask = utils.get_mask_from_cidr(payload_dict['mgmt_subnet'])
+    payload_dict.update({"mgmt_mask": mgmt_mask})
+
+    # Get Appliance IP (4th Valid in subnet)
+    payload_dict.update({"mgmt_ip": utils.get_fourth_ip(payload_dict['mgmt_subnet'])})
 
     # ----------------------------------------------------------------------------------------------------------
     # CREATE JINJA2 TEMPLATE ENVIRONMENT
@@ -93,8 +103,6 @@ def main():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Script Description",
                                      epilog="Usage: ' python gen_procedure' ")
-
-    # parser.add_argument('all', help='Execute all exercises in week 4 assignment')
-    # parser.add_argument('-a', '--all', help='Execute all exercises in week 4 assignment', action='store_true',default=False)
+    parser.add_argument('-p', '--payload_file', help='YAML Payload file to use', action='store',default="Installation_details.yml")
     arguments = parser.parse_args()
     main()
