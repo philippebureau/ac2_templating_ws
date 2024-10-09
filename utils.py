@@ -17,6 +17,8 @@ import re
 import yaml
 import json
 import jinja2
+import ipaddress
+import itertools
 
 
 def is_user_intf(intf):
@@ -170,6 +172,22 @@ def save_file(fn, text):
 
     return fn
 
+
+def get_mask_from_cidr(cidr):
+    network = ipaddress.IPv4Network(cidr, strict=False)
+    return str(network.netmask)
+
+
+def get_first_ip(cidr):
+    network = ipaddress.IPv4Network(cidr, strict=False)
+    first_ip = network.network_address + 1
+    return str(first_ip)
+
+
+def get_fourth_ip(cidr):
+    network = ipaddress.IPv4Network(cidr, strict=False)
+    fourth_ip = next(itertools.islice(network.hosts(), 3, 4), None)
+    return str(fourth_ip) if fourth_ip else None
 
 
 def main():
