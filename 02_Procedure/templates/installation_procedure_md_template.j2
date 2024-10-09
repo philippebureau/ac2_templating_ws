@@ -18,10 +18,10 @@ Smarthands at {{ cfg['location'] }}: {{ cfg['smart_hands'] }}
 | APPLIANCE FQDN        |   {{ cfg['name'] }}    |
 | APPLIANCE IP       |   {{ cfg['mgmt_ip'] }} |
 | MGMT VLAN          |   {{ cfg['mgmt_vlan'] }}    |
-| MGMT Subnet Gateway        |   {{ cfg['gateway_ip'] }}    |
+| MGMT Subnet Gateway        |   {{ cfg['mgmt_gw'] }}    |
 | MGMT Subnet Mask        |   {{ cfg['mgmt_mask'] }}  |
-| MGMT Subnet CIDR        |   {{ cfg['mgmt_cidr'] }}    |
-| MGMT Subnet Gateway Location       |   {{ cfg['mgt_gw'] }}    |
+| MGMT Subnet CIDR        |   {{ cfg['mgmt_subnet'] }}    |
+| MGMT Subnet Gateway Location       |   {{ cfg['mgmt_l3dev'] }}    |
 | MGMT SWITCH         |   {{ cfg['mgmt_sw'] }}   |
 | SWITCH INTERFACE       |   {{cfg['mgmt_int'] }}    |
 | SPAN VLAN RANGE        |   {{ cfg['rspan_range'] }}   |
@@ -33,4 +33,28 @@ Smarthands at {{ cfg['location'] }}: {{ cfg['smart_hands'] }}
 | Smart Hands Phone      |   {{ cfg['sh_mobile'] }}    |
 <br>
 ---
-{{ cfg }}
+
+{% if cfg['model'] == 'S2000'  %}
+Installing a {{ cfg['model'] }}
+
+The {{ cfg['model'] }} is a full with 19" 1RU appliance that comes with mounting ears.
+Please attach the mounting ears to install in {{ cfg['rack'] }}  RU {{ cfg['rack'] }}
+
+{% else %}
+Installing a {{ cfg['model'] }}
+
+The {{ cfg['model'] }} is not a full with appliance.  Your order should have come with a standard 19" shelf.
+The shelf needs to be mounted in {{ cfg['rack'] }}  RU {{ cfg['rack'] }} and the Appliance placed on top.
+
+{% endif %}
+
+Tip:  It might be easier to configure the IP, Mask, and Gateway prior to taking to the IDF.
+
+### Labeling
+The appliance should have been sent with an envelope containing two labels.
+Please affix one label to the front of the unit and one to the back.
+Labels must be visible from front and back.
+
+{% for k,v in cfg.items() %}
+{{ k }}  {{ v }}
+{% endfor %}
