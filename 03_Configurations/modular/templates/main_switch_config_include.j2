@@ -1,0 +1,12 @@
+Main Switch Configuration Template
+
+{# main_switch_config.j2 #}
+{% include "base_switch_config_include.j2" %}
+
+{% block user_interface %}
+{% include "user_interface_config_include.j2" %}
+{% endblock %}
+
+{% block tacacs_config %}
+{% include "tacacs_server_config_include.j2" %}
+{% endblock %}

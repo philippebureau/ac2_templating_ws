@@ -1,0 +1,13 @@
+TACACS Server Configuration Template
+
+{# tacacs_server_config.j2 #}
+{% extends "base_switch_config.j2" %}
+
+{% block tacacs_config %}
+tacacs-server host {{ tacacs_server_ip }}
+tacacs-server key {{ tacacs_key }}
+aaa group server tacacs+ TACACS_GROUP
+ server {{ tacacs_server_ip }}
+aaa authentication login default group TACACS_GROUP local
+aaa authorization exec default group TACACS_GROUP local
+{% endblock %}
