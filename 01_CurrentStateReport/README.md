@@ -19,7 +19,7 @@ Specifically, we take the JSON output of a SuzieQ bgp show command and process t
 - Detail if the sessions are iBGP or eBGP (including count of each)
 - Generate a diagram of the peering relationships with relevant attributes for each (name, vrf, ASN, state)
 
-This project will also establish a patter that will be used throughout the class.  A repository with a templates folder where all the relevant Jinja2 templates can be found.
+This project will also establish a pattern that will be used throughout the class.  A repository with a templates folder where all the relevant Jinja2 templates can be found.
 This project also illustrates how passing each variable can become too complex.
 
 Putting all your templates in a ***templates*** directory is a good practice and all the other mini projects 
