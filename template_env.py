@@ -65,7 +65,7 @@ def jenv_filesystem(search_dir="templates"):
     """
 
     env = jinja2.Environment(
-        loader=jinja2.FileSystemLoader(search_dir, encoding='utf-8'),
+        loader=jinja2.FileSystemLoader(search_dir, encoding="utf-8"),
         line_comment_prefix="#",
         keep_trailing_newline=False,  # Default is False
         trim_blocks=True,  # Removes lines
@@ -100,7 +100,11 @@ def jenv_string(template_string, template_vars):
 
     rendered_string_template = False
 
-    rendered_string_template = jinja2.Environment().from_string(template_string).render(template_vars=template_vars)
+    rendered_string_template = (
+        jinja2.Environment()
+        .from_string(template_string)
+        .render(template_vars=template_vars)
+    )
 
     return rendered_string_template
 
@@ -141,7 +145,7 @@ def load_mydictvar():
 
 
 def load_mylistvar():
-    return [1,2,3,4,66,78,90]
+    return [1, 2, 3, 4, 66, 78, 90]
 
 
 def test_string_template():
@@ -161,12 +165,11 @@ def main():
 
     env_obj = jenv_filesystem()
 
-    env_obj.add_extension('jinja2.ext.debug')
+    env_obj.add_extension("jinja2.ext.debug")
 
     # env_obj = jenv_pkgloader()
 
     # env = Environment(extensions=['jinja2.ext.debug'])
-
 
     """
     
@@ -198,11 +201,7 @@ def main():
         print(template_obj.name)
         print(template_obj.new_context())
         print(template_obj.stream())
-        print(
-            template_obj.render(
-                mylistvar=mylistvar
-            )
-        )
+        print(template_obj.render(mylistvar=mylistvar))
 
     env_obj.tests["usr_intf"] = utils.is_user_intf
 
