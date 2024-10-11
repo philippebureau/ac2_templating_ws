@@ -12,14 +12,17 @@ __date__ = "8/31/24"
 __copyright__ = "Copyright (c) 2023 Claudia"
 __license__ = "Python"
 
-import argparse
+
 import re
+import os
+import csv
 import yaml
 import json
 import jinja2
+import argparse
+import datetime
 import ipaddress
 import itertools
-
 
 def is_user_intf(intf):
     """
@@ -38,7 +41,7 @@ def is_user_intf(intf):
 def load_json(filename):
 
     try:
-        with open(filename, 'r') as file:
+        with open(filename, "r") as file:
             data = json.load(file)
         return data
     except FileNotFoundError:
@@ -56,10 +59,64 @@ def load_yaml(filename):
     :param filename:
     :return:
     """
-    with open(filename, 'r') as file:
+    with open(filename, "r") as file:
         data = yaml.safe_load(file)
 
     return data
+
+
+def load_csv(filename):
+    """
+    Given a path fo a file including filename, safely opens a CSV file and returns either None if it
+    cannot open the file or returns the data in the file as a list (each element of the list is a row from
+    the CSV file)
+    :param filename: file to open
+    :return: None or list
+    """
+
+    try:
+        with open(filename, 'r', encoding='utf-8-sig', newline='') as csv_file:
+            csv_reader = csv.reader(csv_file)
+            data = list(csv_reader)
+            return data
+    except FileNotFoundError:
+        print(f"Error: The file '{filename}' was not found.")
+    except csv.Error as e:
+        print(f"Error reading CSV file: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+    return None
+
+
+def save_file(fn, text):
+    """
+
+    :param fn:
+    :param text:
+    :return:
+    """
+    with open(fn, "w") as f:
+        f.write(text)
+
+    return fn
+
+
+def check_and_create_directory(directory_path):
+    if not os.path.exists(directory_path):
+        os.makedirs(directory_path)
+        return True
+    return False
+
+
+def lists_to_dicts(data):
+    """
+    Takes in a CSV file with a header row as the first row and one ore more 'data' rows and builds and returns
+    a list of dictionaries
+    :param data:
+    :return:
+    """
+    headers = data[0]
+    return [dict(zip(headers, row)) for row in data[1:]]
 
 
 def jenv_filesystem(search_dir="templates", line_comment="#"):
@@ -110,7 +167,7 @@ def jenv_filesystem(search_dir="templates", line_comment="#"):
     """
 
     env = jinja2.Environment(
-        loader=jinja2.FileSystemLoader(search_dir, encoding='utf-8'),
+        loader=jinja2.FileSystemLoader(search_dir, encoding="utf-8"),
         line_comment_prefix=line_comment,
         keep_trailing_newline=False,  # Default is False
         trim_blocks=True,  # Removes lines
@@ -145,7 +202,9 @@ def load_jtemplate(jenv_obj, template_file_name):
     return template_obj
 
 
-def render_in_one(template_file_name, payload_dict, search_dir="templates", line_comment="#"):
+def render_in_one(
+    template_file_name, payload_dict, search_dir="templates", line_comment="#"
+):
     """
     Inspired by:
     https://daniel.feldroy.com/posts/jinja2-quick-load-function
@@ -163,14 +222,7 @@ def render_in_one(template_file_name, payload_dict, search_dir="templates", line
     jtemplate = load_jtemplate(jenv, template_file_name=template_file_name)
 
     # The templates must use a variable called "payload_dict"
-    return jtemplate.render(payload_dict=payload_dict)
-
-
-def save_file(fn, text):
-    with open(fn, "w") as f:
-        f.write(text)
-
-    return fn
+    return jtemplate.render(cfg=payload_dict)
 
 
 def get_mask_from_cidr(cidr):
@@ -190,14 +242,48 @@ def get_fourth_ip(cidr):
     return str(fourth_ip) if fourth_ip else None
 
 
+def add_business_days(start_date, business_days):
+    """
+    This helper function takes a start date and the number of business days to add. It iterates through the calendar,
+    skipping weekends, until it has counted the specified number of business days.
+
+    :param start_date:
+    :param business_days:
+    :return:
+    """
+    end_date = start_date
+    while business_days > 0:
+        end_date += datetime.timedelta(days=1)
+        if end_date.weekday() < 5:  # Monday to Friday are 0 to 4
+            business_days -= 1
+    return end_date
+
+
+def calculate_future_business_date(business_days):
+    """
+    This is the main function that uses today's date as the starting point and calls add_business_days
+    to calculate the future date.
+
+    To use this function, simply call calculate_future_business_date with the number of business days
+    you want to add to today's date. For example:
+
+    ** perplexity
+    :param business_days:
+    :return:
+    """
+    today = datetime.date.today()
+    return add_business_days(today, business_days)
+
+
 def main():
     pass
 
 
 # Standard call to the main() function.
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Script Description",
-                                     epilog="Usage: ' python utils' ")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Script Description", epilog="Usage: ' python utils' "
+    )
 
     # parser.add_argument('all', help='Execute all exercises in week 4 assignment')
     # parser.add_argument('-a', '--all', help='Execute all exercises in week 4 assignment', action='store_true',default=False)
