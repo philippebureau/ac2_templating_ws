@@ -26,21 +26,27 @@ def main():
     # All in one
 
     payload_dict = {
-        "list": [1,2,3,4,5],
+        "list": [1, 2, 3, 4, 5],
         "maxstack": 9,
         "hostname": "myswitch-01",
-        "mydict": {"subnet": "192.168.0.0/24", "gw": "192.168.0.1", "mask": "255.255.255.0"},
+        "mydict": {
+            "subnet": "192.168.0.0/24",
+            "gw": "192.168.0.1",
+            "mask": "255.255.255.0",
+        },
     }
 
-    rendered = utils.render_in_one("all_in_one.j2", payload_dict, search_dir="templates", line_comment="#")
+    rendered = utils.render_in_one(
+        "all_in_one.j2", payload_dict, search_dir="templates", line_comment="#"
+    )
     print(rendered)
 
 
-
 # Standard call to the main() function.
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Script Description",
-                                     epilog="Usage: ' python one_step_jinja.py' ")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Script Description", epilog="Usage: ' python one_step_jinja.py' "
+    )
 
     # parser.add_argument('all', help='Execute all exercises in week 4 assignment')
     # parser.add_argument('-a', '--all', help='Execute all exercises in week 4 assignment', action='store_true',default=False)
