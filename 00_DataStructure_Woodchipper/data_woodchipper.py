@@ -13,16 +13,18 @@ __copyright__ = "Copyright (c) 2023 Claudia"
 __license__ = "Python"
 
 
-import solara
-from solara.components.file_drop import FileInfo
-import pandas as pd
+import os
+import re
 import yaml
 import json
-import pathlib
-import textwrap
-import os
 import jinja2
 import random
+import pathlib
+import textwrap
+import pandas as pd
+import solara
+from solara.components.file_drop import FileInfo
+
 
 
 # Declare reactive variables at the top level. Components using these variables
@@ -32,12 +34,102 @@ data = solara.reactive("")
 filename = solara.reactive("")
 template_string = solara.reactive("")
 rendered_string = solara.reactive("")
+variable_name_input = solara.reactive("")
 
+# Defining locally because we have not introduced the utils import strategy yet
 def save_file(fn, text):
+    """
+    Simple funciton to save text to a file fn
+    :param fn: filename or full path filename
+    :param text:
+    :return: fn
+    """
     with open(fn, "w") as f:
         f.write(text)
 
     return fn
+
+
+
+def validate_variable_name(name):
+    # Check if the name is a valid Python identifier
+    pattern = re.compile(r"^[a-zA-Z_][a-zA-Z0-9_]*$")
+    return bool(pattern.match(name))
+
+
+@solara.component
+def PythonVariableInput(DEFAULT_VARIABLE_NAME):
+    variable_name, set_variable_name = solara.use_state(DEFAULT_VARIABLE_NAME)
+    is_valid, set_is_valid = solara.use_state(True)
+
+    def handle_input(value):
+        set_variable_name(value)
+        set_is_valid(validate_variable_name(value))
+
+    solara.InputText(
+        label="Enter a valid Python variable name used to store the data in the selected file",
+        value=variable_name,
+        on_value=handle_input,
+        error=not is_valid,
+        continuous_update=True
+    )
+
+    if not is_valid:
+        solara.Error("Invalid variable name. Please use only letters, numbers, and underscores, and start with a letter or underscore.")
+    elif variable_name:
+        solara.Success(f"Valid variable name: {variable_name}")
+
+    if variable_name:
+        solara.Markdown(f"""
+        You can use this variable in your Python script like this:
+        ```python
+        {variable_name} = "All the data in the selected file"
+        print({variable_name})
+        
+        ```
+        """)
+
+        # Jinja2 template example
+        jinja2_template = jinja2.Template("""
+
+        This is a Jinja2 template using the data in the variable you provided.
+        
+        You can use it like this in your template:
+
+        {% raw %}
+        {{ loaded_data }}
+        {% endraw %}
+        """)
+
+
+        rendered_template = jinja2_template.render(loaded_data=variable_name)
+
+
+
+        solara.Markdown(f"""
+        You can send the data in your variable **{variable_name}** to a template for rendering.
+        
+        In this example the j2 template itself uses the variable "loaded_data".
+        
+        You are passing the data in **{variable_name}** to the variable "loaded_data" in the template.
+        ```python
+        
+        template.render(loaded_data={variable_name})
+
+        ```
+        
+        """)
+
+        solara.Markdown(f"""
+        ```python
+        {rendered_template}
+        ```
+        """)
+
+        # solara.Text(rendered_template)
+
+        variable_name_input.set(variable_name)
+
 
 @solara.component
 def FilePicker(on_pick):
@@ -97,6 +189,7 @@ def SaveRenderedToFile():
 
     # solara.InputText(label="Enter text", value=text)
     solara.Button("Save to file", on_click=save_to_file)
+
 
 @solara.component
 def StateDisplay():
@@ -165,10 +258,19 @@ def FileLoadPage():
 @solara.component
 def Page():
 
+    """
+    Main Function of the script which defines the areas of the web App
+    - Left pane (sidebar)
+    - Center column for file selection
+    - Center variable input
+
+    :return:
+    """
+
     with solara.Sidebar():
         solara.Markdown("# Data Structure Wood Chipper ☀️")
 
-        image_folder_fp = os.path.join(os.getcwd(),"images")
+        image_folder_fp = os.path.join(os.getcwd(), "images")
         image_folder_path = pathlib.Path(image_folder_fp)
         png_files = list(image_folder_path.glob("*.png"))
 
@@ -188,6 +290,7 @@ def Page():
 
         # used to display Solara state
         #StateDisplay()
+
         loaded_data = data.value
 
         if isinstance(loaded_data, pd.DataFrame):
@@ -203,6 +306,10 @@ def Page():
 
         if there_is_data:
 
+            PythonVariableInput("loaded_data")
+            variable_name = variable_name_input.value
+            solara.Markdown("---")
+
             # Create two side-by-side areas
             with solara.Columns([1, 1]):
                 # ----------------------------------------------------------------------------------------------------
@@ -213,20 +320,20 @@ def Page():
 
                     # If the data is a string create a Jinja2 template
                     if type(loaded_data) == str:
-                        solara.Markdown("Variable **loaded_data** is of type 'String'<br>")
+                        solara.Markdown(f"Variable **{variable_name}** is of type 'String'<br>")
                         solara.Text(loaded_data)
 
                     # If its a list, iterate over the list elements
                     if type(loaded_data) == list:
-                        solara.Markdown("Variable **loaded_data** is of type 'List'<br>")
+                        solara.Markdown(f"Variable **{variable_name}** is of type 'List'<br>")
                         solara.Text(str(loaded_data))
 
                     if type(loaded_data) == dict:
-                        solara.Text("Dictionary")
+                        solara.Markdown(f"Variable **{variable_name}** is of type 'Dict'<br>")
                         solara.Text(str(loaded_data))
 
                     if isinstance(loaded_data, pd.DataFrame):
-                        solara.Text("DataFrame")
+                        solara.Markdown(f"Variable **{variable_name}** is of type 'pd.DataFrame'<br>")
                         solara.DataFrame(loaded_data)
 
                 # ----------------------------------------------------------------------------------------------------
