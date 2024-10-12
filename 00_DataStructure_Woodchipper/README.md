@@ -26,7 +26,14 @@ solara run data_woodchipper.py
 
 When the web page comes up, a list of available files comes up.  These files contain various types of data structures.
 
-Click on one to select it and the right side of the center pane will show the data itself and its type.
+Click on one to select it.
+
+Once a file of data has been selected, the App will allow you to pick a variable name for the data.
+
+Then the App will illustrate how the data in the file, which is now in the variable you defined gets 
+passed to the variable used in the temolate.
+
+The right side of the center pane will show the data itself and its type.
 The left side of the center pane will show the corresponding template derived from the data type.
 The bottom part of the center pane will show the rendered template.
 
