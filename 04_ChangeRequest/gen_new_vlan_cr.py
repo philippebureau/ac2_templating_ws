@@ -15,6 +15,10 @@ __license__ = "Python"
 import argparse
 import os
 import sys
+import pprint
+import webbrowser
+
+import utils_snow_vault
 
 # This is necessary because I want to import functions in a file called utils.py and that file is one level up
 # from here
@@ -24,6 +28,7 @@ parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 # Import the utils module (python script) one level up
 import utils
+
 
 def some_function():
     pass
@@ -59,11 +64,13 @@ def main():
             sys.exit()
 
         # Update the payload dictionary (details_dict here) for this
-        details_dict.update({
-            "requested_by_date": requested_by_date,
-            "vlan_name": vlan_name,
-            "svi_ip": utils.get_first_ip(details_dict['subnet_cidr'])
-        })
+        details_dict.update(
+            {
+                "requested_by_date": requested_by_date,
+                "vlan_name": vlan_name,
+                "svi_ip": utils.get_first_ip(details_dict["subnet_cidr"]),
+            }
+        )
 
         # We will use our "render in one" function to
         # - create the environment
@@ -81,15 +88,49 @@ def main():
         # Saving the output to a text file
         utils.save_file(cfg_file_fullpath, rendered_string)
 
-        print(f"Saved resulting CR file in current direcotry to {filename}")
+        print(f"Saved resulting CR file in current directory to {filename}")
+
+        if arguments.create_cr:
+            # Need to create CR in SNOW
+            resp = utils_snow_vault.create_std_cr_snow(
+                short_desc="AC2 CdL Vlan Work", desc=rendered_string
+            )
+
+            if resp:
+
+                resp_dict = resp.json()
+                url_top = "https://dev255920.service-now.com/"
+
+                # Open default browser to Service Now URL
+                webbrowser.open(url_top)
+
+                print(f"Created Standard Change Request {resp_dict['result']['task_effective_number']}")
+                # print(resp.url)
+                # print(resp.links)
+
+            else:
+                print("Limited response returned")
 
 
 # Standard call to the main() function.
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Script Description",
-                                     epilog="Usage: ' python gen_new_vlan_cr.py' ")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Script Description", epilog="Usage: ' python gen_new_vlan_cr.py' "
+    )
 
-    parser.add_argument('-p', '--payload_file', help='Change details payload file', action='store', default="payload.csv")
-    parser.add_argument('-c', '--create_cr', help='Create Change Request in SNOW', action='store_true', default=False)
+    parser.add_argument(
+        "-p",
+        "--payload_file",
+        help="Change details payload file",
+        action="store",
+        default="payload.csv",
+    )
+    parser.add_argument(
+        "-c",
+        "--create_cr",
+        help="Create Change Request in SNOW",
+        action="store_true",
+        default=False,
+    )
     arguments = parser.parse_args()
     main()
