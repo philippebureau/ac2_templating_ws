@@ -24,6 +24,7 @@ import datetime
 import ipaddress
 import itertools
 
+
 def is_user_intf(intf):
     """
     Cisco centric interface test to see if an interface is a user interface
@@ -90,10 +91,10 @@ def load_csv(filename):
 
 def save_file(fn, text):
     """
-
-    :param fn:
+    Simple funciton to save text to a file fn
+    :param fn: filename or full path filename
     :param text:
-    :return:
+    :return: fn
     """
     with open(fn, "w") as f:
         f.write(text)
