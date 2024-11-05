@@ -91,31 +91,51 @@ With inheritance you define a base template with {% block <name> %} and child te
 
 base_switch_config.j2 (base)
 
-- ​	user_interface_config.j2 # extends "base_switch_config.j2"
-- ​	tacacs_server_config.j2 # extends "base_switch_config.j2"
+- ​	user_interface_config.j2 # child template extends "base_switch_config.j2"
+- ​	tacacs_server_config.j2 # child template extends "base_switch_config.j2"
 
 The price for that is you need one (or more) overarching templates to put it all together.
 
-
-
-
-
 ```python
+{# base_switch_config_block_extends.j2 #}
+hostname {{ hostname }}
 
-Main Switch Configuration Template
-
-{# main_switch_config.j2 #}
-{% include "base_switch_config_include.j2" %}
+vlan {{ user_vlan }}
+ name USER_VLAN
 
 {% block user_interface %}
-{% include "user_interface_config_include.j2" %}
+{# This block will be overridden by child templates #}
 {% endblock %}
 
 {% block tacacs_config %}
-{% include "tacacs_server_config_include.j2" %}
+{# This block will be overridden by child templates #}
 {% endblock %}
 
 ```
+
+
+
+Example child template which extends base (above)
+
+```python
+{# user_interface_config_extends.j2 #}
+{% extends "base_switch_config_block_extends.j2" %}
+
+{% block user_interface %}
+interface {{ user_interface }}
+ description User Access Port
+ switchport mode access
+ switchport access vlan {{ user_vlan }}
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+{% endblock %}
+```
+
+
+
+### Include
+
+Includes
 
 WARNING
 These templates are for example only. They have not been tested andy may not work!
