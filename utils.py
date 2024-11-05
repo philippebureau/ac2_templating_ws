@@ -401,6 +401,10 @@ def get_secret(URL, ROOT_TOKEN, PATH="dev_snow/config"):
         raise Exception("Vault authentication failed")
 
 
+def replace_special_chars(text):
+    # Replace spaces and special characters with underscores
+    return re.sub(r'[^a-zA-Z0-9]', '_', text)
+
 def main():
     pass
 
