@@ -38,7 +38,7 @@ def main():
     }
 
     cfg_dict2 = dict()
-    for idx in range(1,6):
+    for idx in range(1, 6):
         cfg_dict2.update({f"GigE1/0/{idx}": 300})
 
     print(cfg_dict2)
@@ -57,5 +57,5 @@ def main():
 
 
 # Standard call to the main() function.
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

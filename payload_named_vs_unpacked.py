@@ -15,6 +15,7 @@ __license__ = "Python"
 
 import utils
 
+
 def main():
     """
     Short script to illustrate the differences between passing a named variable (data structure or payload) to
@@ -68,5 +69,5 @@ def main():
 
 
 # Standard call to the main() function.
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

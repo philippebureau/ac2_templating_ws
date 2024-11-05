@@ -17,6 +17,7 @@ import pprint
 # Notice we don't need to import Jinja2 here as we are using the function in utils.py
 import utils
 
+
 def main():
     """
     This script is a more evolved version of "move_access_intf.py" which includes only using the env function
@@ -37,13 +38,21 @@ def main():
     cfg_dict = dict()
     desc = "supply kiosk"
 
-    for idx in range(34,39):
+    for idx in range(34, 39):
         # Cisco UXM switches
-        if idx >36:
+        if idx > 36:
             intf_prefix = "Te"
         else:
             intf_prefix = "Tw"
-        cfg_dict.update({f"{intf_prefix}1/0/{idx}": {"new_vlan": 300, "desc": desc, "original_intf": f"GigE1/0/{idx}"}})
+        cfg_dict.update(
+            {
+                f"{intf_prefix}1/0/{idx}": {
+                    "new_vlan": 300,
+                    "desc": desc,
+                    "original_intf": f"GigE1/0/{idx}",
+                }
+            }
+        )
 
     pprint.pprint(cfg_dict)
 
@@ -56,5 +65,5 @@ def main():
 
 
 # Standard call to the main() function.
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
