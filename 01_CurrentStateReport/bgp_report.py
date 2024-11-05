@@ -37,7 +37,13 @@ def create_bgp_diagram(bgp_sessions, filename="bgp_sessions", outformat="png"):
     :param filename:
     :return: Nothing but the file is saved as "filename".
     """
-    with Diagram("BGP Sessions", show=False, filename=filename, direction="LR", outformat=outformat):
+    with Diagram(
+        "BGP Sessions",
+        show=False,
+        filename=filename,
+        direction="LR",
+        outformat=outformat,
+    ):
         # Initialize an empty dictionary which will have a key and Diagram object based on each element
         # (peering session dictionary) of the list
         routers = {}
@@ -84,6 +90,9 @@ def main():
     # Step 1: Create Environment
     env = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"))
 
+    selected_template = "bgp_report_md.j2"
+
+    # ====  START Example of an interactive CLI to pick the template
     # What templates are available in this environment?
     # template_list = env.list_templates()
 
@@ -94,16 +103,16 @@ def main():
 
     # selected_template = get_template_selection(template_list)
     # print(f"You selected: {selected_template}")
-
-    selected_template = "bgp_report_md.j2"
+    # ====  END Example of an interactive CLI to pick the template
 
     # Step 2: Load the template
     bgp_rpt_template = env.get_template(selected_template)
     bgp_rpt_template.source = open(bgp_rpt_template.filename).read()
-    print(bgp_rpt_template.name)
-    print(bgp_rpt_template.filename)
+    print(f"\n\n======= EXECUTING BGP Report Script=======")
+    print(f"\nTemplate name: {bgp_rpt_template.name}")
+    print(f"Template filename: {bgp_rpt_template.filename}")
 
-    print(f"Viewing Template {selected_template} Source:")
+    print(f"\nTemplate {selected_template} Source:")
     print(bgp_rpt_template.source)
 
     # Manipulate the data
@@ -118,7 +127,6 @@ def main():
     ibgp_count = 0
     ebgp_count = 0
     for line in data:
-        print(line)
         if "Down" in line["state"]:
             all_peers_up = False
         if line["asn"] == line["peerAsn"]:
@@ -126,66 +134,38 @@ def main():
         else:
             ebgp_count += 1
 
-    # Create a diagram context
-    # with Diagram("BGP Sessions", show=True, direction="LR"):
-    #
-    #     for line in data:
-    #
-    #         # Define BGP routers
-    #         router1 = Router("Router 1\nAS 65001")
-    #         router2 = Router("Router 2\nAS 65002")
-    #         router3 = Router("Router 3\nAS 65003")
-    #         router4 = Router("Router 4\nAS 65004")
-    #
-    #     # Define BGP sessions
-    #     router1 - Edge(label="BGP Session") - router2
-    #     router2 - Edge(label="BGP Session") - router3
-    #     router3 - Edge(label="BGP Session") - router4
-    #     router1 - Edge(label="BGP Session") - router4
-    #
-    # # Create a diagram context
-    # with Diagram("BGP Sessions", show=False, filename="bgp_sessions", outformat="png"):
-    #
-    #     # Define BGP routers
-    #     router1 = Router("Router 1\nAS 65001")
-    #     router2 = Router("Router 2\nAS 65002")
-    #     router3 = Router("Router 3\nAS 65003")
-    #     router4 = Router("Router 4\nAS 65004")
-    #
-    #     # Define BGP sessions
-    #     router1 - Edge(label="BGP Session") - router2
-    #     router2 - Edge(label="BGP Session") - router3
-    #     router3 - Edge(label="BGP Session") - router4
-    #     router1 - Edge(label="BGP Session") - router4
-    #
-    # print("Diagram saved as bgp_sessions.png")
-
-    drawing_filename = "JPGBGP_Diagram"
+    drawing_filename = f"{utils.replace_special_chars(arguments.location)}_BGP_Diagram"
     outformat = "jpg"
     create_bgp_diagram(data, filename=drawing_filename, outformat=outformat)
-    print("Diagram saved as bgp_sessions.png")
+    print(f"\nDiagram saved as {drawing_filename}.{outformat}")
 
     # Step 3  Render the template
 
     # Render the template with the BGP data
     rendered_config = bgp_rpt_template.render(
-        location="GDL Campus",
+        location=arguments.location,
         bgp_list=data,
         all_peers_up=all_peers_up,
         ibgp_count=ibgp_count,
         ebgp_count=ebgp_count,
-        drawing_filename=f"{drawing_filename}.{outformat}"
+        drawing_filename=f"{drawing_filename}.{outformat}",
     )
 
+    print("=============== RENDERED RESULT ===============")
     print(rendered_config)
+    print("===============================================\n")
 
-    utils.save_file("BGP_REPORT.md", rendered_config)
+    utils.save_file(
+        f"{utils.replace_special_chars(arguments.location)}_BGP_REPORT.md",
+        rendered_config,
+    )
 
 
 # Standard call to the main() function.
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Script Description", epilog="Usage: ' python bgp_report' "
+        description="Script Description",
+        epilog="Usage: ' python bgp_report.py' or python bgp_report.py -l 'AMS Campus'",
     )
 
     parser.add_argument(
@@ -194,6 +174,13 @@ if __name__ == "__main__":
         help="Add Custom Title to report",
         action="store",
         default="BGP Report",
+    )
+    parser.add_argument(
+        "-l",
+        "--location",
+        help="Update location",
+        action="store",
+        default="GDL Campus",
     )
     arguments = parser.parse_args()
     main()
