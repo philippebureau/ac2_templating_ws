@@ -14,7 +14,6 @@ __license__ = "Python"
 
 import argparse
 import os
-import re
 import sys
 import datetime
 import pytz
@@ -30,10 +29,6 @@ sys.path.append(root_dir)
 import utils
 
 
-def some_function():
-    pass
-
-
 def main():
 
     # Get the current date and time
@@ -46,7 +41,8 @@ def main():
     file_timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 
     # Load the data in the CSV file
-    payload_data = utils.read_csv_file(os.path.join(os.getcwd(), arguments.payload_file))
+    payload_data = utils.load_csv(os.path.join(os.getcwd(), arguments.payload_file))
+    print(f"\nGenerating configurations for switches in CSV file {arguments.payload_file}\n")
 
     if payload_data:
         # We have read in a CSV file with the first row as the header and then one ore more lines of new switches
@@ -55,7 +51,7 @@ def main():
 
         # cfg_dict will be passed to the template as "cfg"
         for cfg_dict in payload_lod:
-            print(cfg_dict)
+
             # Build template payload
             cfg_dict.update({"timestamp": timestamp})
 
@@ -75,7 +71,6 @@ def main():
 
             # Determine mask in dotted notation get_mask_from_cidr(cidr)
             cfg_dict.update({"mgmt_mask": utils.get_mask_from_cidr(cfg_dict['mgmt-subnet_cidr'])})
-            print(cfg_dict)
 
             # Check to see if the output directory exists and if it does not, create it
             # This is the directory where we will store the resulting config files
@@ -89,7 +84,11 @@ def main():
 
             rendered = utils.render_in_one("dnac_baseconfig_sample_template.j2", cfg_dict)
 
+            print(f"\tGenerating configuration for {filename}")
+
             utils.save_file(cfg_file_fullpath, rendered)
+
+        print(f"\nSaved files in {cfg_directory}\n")
 
 
 # Standard call to the main() function.
@@ -103,14 +102,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "-p",
         "--payload_file",
-        help="CSV Payload file to use",
+        help="CSV Payload file to use Default is new_switches.csv",
         action="store",
         default="new_switches.csv",
     )
     parser.add_argument(
         "-o",
         "--output_dir",
-        help="output directory for configuration files",
+        help="output directory for configuration files Default is cfg_output",
         action="store",
         default="cfg_output",
     )
