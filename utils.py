@@ -12,15 +12,17 @@ __date__ = "8/31/24"
 __copyright__ = "Copyright (c) 2023 Claudia"
 __license__ = "Python"
 
-
+import pprint
 import re
 import os
 import csv
 import yaml
 import json
+import hvac
 import jinja2
 import argparse
 import datetime
+import requests
 import ipaddress
 import itertools
 
@@ -76,7 +78,7 @@ def load_csv(filename):
     """
 
     try:
-        with open(filename, 'r', encoding='utf-8-sig', newline='') as csv_file:
+        with open(filename, "r", encoding="utf-8-sig", newline="") as csv_file:
             csv_reader = csv.reader(csv_file)
             data = list(csv_reader)
             return data
@@ -120,7 +122,9 @@ def lists_to_dicts(data):
     return [dict(zip(headers, row)) for row in data[1:]]
 
 
-def jenv_filesystem(search_dir="templates", line_comment="#"):
+def jenv_filesystem(
+    search_dir="templates", line_comment="##", ktn=False, lsb=False, tb=False
+):
     """
 
     RECOMMENDED when getting started!
@@ -157,22 +161,71 @@ def jenv_filesystem(search_dir="templates", line_comment="#"):
     Enable Debugging
     # env = Environment(extensions=['jinja2.ext.debug'])
 
+    ! line comment prefix sets the prefix for single-line comments
+    Valid options are '//', '#', ';', '--', '##'
+    Important notes:
+
+    The line comment only works for single-line comments
+    Everything after the prefix to the end of the line becomes a comment
+    Block comments {# #} still work regardless of your line comment setting
+    Choose a prefix that won't appear naturally in your template content
+    The prefix must appear at the start of the line to be treated as a comment
+
+
     ! Generally I leave this alone to default to {% %}  I like the unambiguity
     line_statement_prefix="",
 
+    ! Undefined default
+    undefined=jinja2.runtime.Undefined
+    -Silently evaluates to an undefined object
+    -Printing it results in an empty string
+    -Operations on it raise an UndefinedError
+
     ! Error out if
-    undefined=jinja2.runtime.StrictUndefined
+    undefined=jinja2.runtime.StrictUndefined (recommended)
+    -Most strict option
+    -Raises an UndefinedError immediately when you try to access any undefined variable
+    -Good for development to catch missing variables early
+
+    !For highly nested structures
+    undefined=jinja2.runtime.ChainableUndefined
+    -Allows you to chain attributes and items that return another undefined object
+    -Only raises an error when you try to print or convert to a string
+    U-seful when you have deeply nested structures
+
+    ! Debugging undefined
+    undefined=jinja2.runtime.DebugUndefined
+    -Returns the name of the undefined variable as a string
+    -Helpful for debugging templates
+    -Won't raise errors, but makes it obvious what's missing
+
+    ! Custom Undefined
+    class CustomUndefined(Undefined):
+        def _fail_with_undefined_error(self, *args, **kwargs):
+            return f'[Missing: {self._undefined_name}]'
+
+        __str__ = _fail_with_undefined_error
+
+    undefined=jinja2.runtime.CustomUndefined
+
+    -You can create your own undefined class
+    -Useful for custom error handling or logging
 
     :param fp: the template directory path (relative or absolute)
     :return: the jinja2 environment object containing all the templates in the provided directory
     """
 
+    valid_line_comment_prefixes = ["//", "#", ";", "--", "##"]
+    # In case an invalid or blank line comment is provided to the function
+    if line_comment not in valid_line_comment_prefixes:
+        line_comment = "##"
+
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(search_dir, encoding="utf-8"),
-        line_comment_prefix=line_comment,
-        keep_trailing_newline=False,  # Default is False
-        trim_blocks=True,  # Removes lines
-        lstrip_blocks=True,
+        line_comment_prefix=line_comment,  # Only works for single-line comments
+        keep_trailing_newline=ktn,  # Default is False True preserve trailing newline in templates
+        trim_blocks=tb,  # True remove first newline after a block Default is False
+        lstrip_blocks=lsb,  # True remove leading spaces and tabs from block tags Default is False
         undefined=jinja2.runtime.Undefined,  # Default is Undefined - undefined variables render as empty string
     )
 
@@ -218,7 +271,7 @@ def render_in_one(
     :return: rendered text as a string (class 'str')
     """
 
-    jenv = jenv_filesystem(search_dir="templates", line_comment="#")
+    jenv = jenv_filesystem(search_dir=search_dir, line_comment="#")
 
     jtemplate = load_jtemplate(jenv, template_file_name=template_file_name)
 
@@ -274,6 +327,78 @@ def calculate_future_business_date(business_days):
     """
     today = datetime.date.today()
     return add_business_days(today, business_days)
+
+
+def create_std_cr_snow(snow_dict):
+
+    VAULT_ADDR = "http://127.0.0.1:8200"
+    ROOT_TOKEN = "hvs.SR1x9c4pdbFFxr2L6BjxBJL9"
+
+    # ServiceNow instance details
+    username, password, snow_instance = get_secret(VAULT_ADDR, ROOT_TOKEN)
+    # print(username)
+    # print(password)
+    # print(snow_instance)
+
+    pprint.pp(snow_dict)
+
+    template = "b9c8d15147810200e90d87e8dee490f6"
+
+    # API endpoint
+    url = f"https://{snow_instance}/api/now/table/change_request"
+
+    # Headers
+    headers = {"Content-Type": "application/json", "Accept": "application/json"}
+
+    # Payload (adjust fields as needed)
+    payload = {
+        "short_description": snow_dict["short_desc"],
+        "template": template,  # Sys ID of the template you want to use
+        "description": snow_dict["desc"],
+        "test_plan": snow_dict["test_plan"],
+        "justification": snow_dict["justification"],
+        "implementation_plan": snow_dict["implementation_plan"],
+        "risk_impact_analysis": snow_dict["risk_impact_analysis"],
+        "backout_plan": snow_dict["backout_plan"],
+        # "work_notes": "These are my work notes",
+        # Add other fields as required
+    }
+
+    # Send POST request
+    response = requests.post(
+        url, auth=(username, password), headers=headers, data=json.dumps(payload)
+    )
+
+    # Check response
+    if response.status_code == 201:
+        print("Standard Change Request created successfully")
+        # pprint.pprint(response.json())
+    else:
+        print(f"Error creating Standard Change Request: {response.status_code}")
+        # print(response.text)
+
+    return response
+
+
+# Hashicorp Local Vault
+def get_secret(URL, ROOT_TOKEN, PATH="dev_snow/config"):
+
+    # Create a client instance
+    client = hvac.Client(url=URL, token=ROOT_TOKEN)
+
+    # Check if client is authenticated
+    if client.is_authenticated():
+        # Read the secret
+        secret = client.secrets.kv.v2.read_secret_version(path=PATH)
+
+        # Extract username and password
+        username = secret["data"]["data"]["username"]
+        password = secret["data"]["data"]["password"]
+        instance = secret["data"]["data"]["instance"]
+
+        return username, password, instance
+    else:
+        raise Exception("Vault authentication failed")
 
 
 def main():
