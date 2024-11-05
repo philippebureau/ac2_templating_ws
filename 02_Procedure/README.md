@@ -127,9 +127,9 @@ This probably seems very attractive.  Jinja2 will "unpack" the variable (**) so 
 IP Address is {{ 'ip_address' }}
 ```
 
-While attractive, this makes troubleshooting more difficult.  If you don't know all the keys (of course you can list them in your script) or what to look at what is getting passed to your template, this method does not directly support that.
+While attractive, this "un-named" approach makes troubleshooting more difficult.  If you don't know all the keys (of course you can list them in your script) or want to look at what is getting passed to your template, this method does not directly support that.
 
-For this reason, I always recommend passing a named variable like `cfg`. 
+For this reason, I always recommend passing a named variable like `cfg`.   While the un-named strategy exposes the keys directly, it is harder to troubleshoot and handle lists.
 
 Worst case, you can have a template with:
 
@@ -141,10 +141,13 @@ which will output your data structure once rendered.
 
 
 
-
-
 ---
-### Modules
+### Modules 
 
-- jinja2
+- Utils
+
+  - jinja2
+
+  - PyYAML
+
 
