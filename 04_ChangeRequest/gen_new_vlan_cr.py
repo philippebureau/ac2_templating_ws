@@ -92,8 +92,21 @@ def main():
 
         if arguments.create_cr:
             # Need to create CR in SNOW
-            resp = utils_snow_vault.create_std_cr_snow(
-                short_desc="AC2 CdL Vlan Work", desc=rendered_string
+
+            #     keys = ["instance", "username", "password", "template", "short_desc", "desc", "test_plan", ]
+
+            cr_payload = {
+                "short_desc": "AC2 CdL Vlan Work",
+                "desc": rendered_string,
+                "test_plan": "ping",
+                "justification": "Building automation project",
+                "implementation_plan": "Just do it",
+                "risk_impact_analysis": "net new so risk minimal, no active users",
+                "backout_plan": "undo the work",
+
+            }
+            resp = utils.create_std_cr_snow(
+                cr_payload
             )
 
             if resp:
