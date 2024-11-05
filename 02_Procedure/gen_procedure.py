@@ -48,9 +48,9 @@ def main():
     # ----------------------------------------------------------------------------------------------------------
     # Select Image
     # This sets the image we will use in the document
-    if re.search(r"600", payload_dict['model']):
+    if re.search(r"600", payload_dict["model"]):
         img = os.path.join(".", "images", "ORDR_S600_Sensor.jpg")
-    elif re.search(r"2000", payload_dict['model']):
+    elif re.search(r"2000", payload_dict["model"]):
         img = os.path.join(".", "images", "ORDR_S2000_Sensor.jpg")
     else:
         img = os.path.join(".", "images", "istockphoto-519363862-612x612.jpeg")
@@ -64,14 +64,14 @@ def main():
     # TODO: Calculate configuration parameters from subnet
 
     # Get Gateway
-    payload_dict.update({"mgmt_gw": utils.get_first_ip(payload_dict['mgmt_subnet'])})
+    payload_dict.update({"mgmt_gw": utils.get_first_ip(payload_dict["mgmt_subnet"])})
 
     # Get Mask in dotted notation
-    mgmt_mask = utils.get_mask_from_cidr(payload_dict['mgmt_subnet'])
+    mgmt_mask = utils.get_mask_from_cidr(payload_dict["mgmt_subnet"])
     payload_dict.update({"mgmt_mask": mgmt_mask})
 
     # Get Appliance IP (4th Valid in subnet)
-    payload_dict.update({"mgmt_ip": utils.get_fourth_ip(payload_dict['mgmt_subnet'])})
+    payload_dict.update({"mgmt_ip": utils.get_fourth_ip(payload_dict["mgmt_subnet"])})
 
     # ----------------------------------------------------------------------------------------------------------
     # CREATE JINJA2 TEMPLATE ENVIRONMENT
@@ -81,16 +81,20 @@ def main():
     env_obj = utils.jenv_filesystem(line_comment="=")
     # print(env_obj.list_templates())
     # ADD DEBUGGING Just In Case
-    env_obj.add_extension('jinja2.ext.debug')
+    env_obj.add_extension("jinja2.ext.debug")
 
     # LOAD TEMPLATE
-    template_obj = utils.load_jtemplate(env_obj, template_file_name="installation_procedure_md_template.j2")
+    template_obj = utils.load_jtemplate(
+        env_obj, template_file_name="installation_procedure_md_template.j2"
+    )
     rendered = template_obj.render(cfg=payload_dict)
 
     # Define Parent directory (in this example we are saving into the local directory)
     other_fp = os.path.join(os.getcwd())
     # Define the filename
-    filename = f"{payload_dict['location']}_ORDR_Appliance_Installation_{file_timestamp}.md"
+    filename = (
+        f"{payload_dict['location']}_ORDR_Appliance_Installation_{file_timestamp}.md"
+    )
     # Create the full path to the new file
     procedure_fp = os.path.join(other_fp, filename)
 
@@ -100,9 +104,18 @@ def main():
 
 
 # Standard call to the main() function.
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Script Description",
-                                     epilog="Usage: ' python gen_procedure' ")
-    parser.add_argument('-p', '--payload_file', help='YAML Payload file to use', action='store',default="Installation_details.yml")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Script Description",
+        epilog="Usage: ' python gen_procedure.py' The default payload is 'Installation_details_S2000.yml'.  "
+               "To use another payload file use the -p option.",
+    )
+    parser.add_argument(
+        "-p",
+        "--payload_file",
+        help="YAML Payload file to use",
+        action="store",
+        default="Installation_details_S2000.yml",
+    )
     arguments = parser.parse_args()
     main()
