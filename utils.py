@@ -215,7 +215,7 @@ def jenv_filesystem(
     :return: the jinja2 environment object containing all the templates in the provided directory
     """
 
-    valid_line_comment_prefixes = ["//", "#", ";", "--", "##"]
+    valid_line_comment_prefixes = ["//", "#", ";", "--", "##", "=", "=="]
     # In case an invalid or blank line comment is provided to the function
     if line_comment not in valid_line_comment_prefixes:
         line_comment = "##"
