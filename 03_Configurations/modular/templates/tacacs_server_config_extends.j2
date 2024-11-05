@@ -1,7 +1,7 @@
-TACACS Server Configuration Template
-
 {# tacacs_server_config.j2 #}
 {% extends "base_switch_config.j2" %}
+
+TACACS Server Configuration Template
 
 {% block tacacs_config %}
 tacacs-server host {{ tacacs_server_ip }}
