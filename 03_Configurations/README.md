@@ -49,4 +49,10 @@ Main Switch Configuration Template
 ```
 
 WARNING
-These templats are for example only. They have not been tested andy may not work!
+These templates are for example only. They have not been tested andy may not work!
+
+
+---
+### Modules
+
+- jinja2
