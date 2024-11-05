@@ -6,15 +6,16 @@ The goal of this mini project is to look at different data structures and how th
 
 within a Jinja2 Template.
 
-The solara module is uses to present the information via a web interface which can be run locally 
+The solara module is used to present the information via a web interface which can be run locally 
 on the student's laptop.
 
-In the examples, all payload is loaded into a variable named `loaded_data`.
-This variable in the pyhon script can be a 
-- string variable
+In the examples, by default, all payload is loaded into a variable named `loaded_data` which can be changed.
+This variable in the python script can be a: 
+
+- a string 
 - a list
 - a dictionary
-- a complex data structure
+- a complex data structure (list of dictionaries, dictionary of values including lists and dictionaries, etc.)
 
 The data_woodchipper.py App illustrates data structures and their display in corresponding Jinja2 templates.
 

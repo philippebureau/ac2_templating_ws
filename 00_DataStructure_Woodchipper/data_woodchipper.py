@@ -21,10 +21,10 @@ import jinja2
 import random
 import pathlib
 import textwrap
+import pprint
 import pandas as pd
 import solara
 from solara.components.file_drop import FileInfo
-
 
 
 # Declare reactive variables at the top level. Components using these variables
@@ -35,6 +35,7 @@ filename = solara.reactive("")
 template_string = solara.reactive("")
 rendered_string = solara.reactive("")
 variable_name_input = solara.reactive("")
+
 
 # Defining locally because we have not introduced the utils import strategy yet
 def save_file(fn, text):
@@ -50,7 +51,6 @@ def save_file(fn, text):
     return fn
 
 
-
 def validate_variable_name(name):
     # Check if the name is a valid Python identifier
     pattern = re.compile(r"^[a-zA-Z_][a-zA-Z0-9_]*$")
@@ -61,6 +61,7 @@ def validate_variable_name(name):
 def PythonVariableInput(DEFAULT_VARIABLE_NAME):
     variable_name, set_variable_name = solara.use_state(DEFAULT_VARIABLE_NAME)
     is_valid, set_is_valid = solara.use_state(True)
+    show_details = solara.use_reactive(False)
 
     def handle_input(value):
         set_variable_name(value)
@@ -71,26 +72,36 @@ def PythonVariableInput(DEFAULT_VARIABLE_NAME):
         value=variable_name,
         on_value=handle_input,
         error=not is_valid,
-        continuous_update=True
+        continuous_update=True,
     )
 
     if not is_valid:
-        solara.Error("Invalid variable name. Please use only letters, numbers, and underscores, and start with a letter or underscore.")
+        solara.Error(
+            "Invalid variable name. Please use only letters, numbers, and underscores, and start with a letter or underscore."
+        )
     elif variable_name:
         solara.Success(f"Valid variable name: {variable_name}")
 
-    if variable_name:
-        solara.Markdown(f"""
+    def toggle_details():
+        show_details.value = not show_details.value
+
+    solara.Button("Toggle Details", on_click=toggle_details)
+
+    if variable_name and not show_details.value:
+        solara.Markdown(
+            f"""
         You can use this variable in your Python script like this:
         ```python
         {variable_name} = "All the data in the selected file"
         print({variable_name})
         
         ```
-        """)
+        """
+        )
 
         # Jinja2 template example
-        jinja2_template = jinja2.Template("""
+        jinja2_template = jinja2.Template(
+            """
 
         This is a Jinja2 template using the data in the variable you provided.
         
@@ -99,14 +110,13 @@ def PythonVariableInput(DEFAULT_VARIABLE_NAME):
         {% raw %}
         {{ loaded_data }}
         {% endraw %}
-        """)
-
+        """
+        )
 
         rendered_template = jinja2_template.render(loaded_data=variable_name)
 
-
-
-        solara.Markdown(f"""
+        solara.Markdown(
+            f"""
         You can send the data in your variable **{variable_name}** to a template for rendering.
         
         In this example the j2 template itself uses the variable "loaded_data".
@@ -118,13 +128,16 @@ def PythonVariableInput(DEFAULT_VARIABLE_NAME):
 
         ```
         
-        """)
+        """
+        )
 
-        solara.Markdown(f"""
+        solara.Markdown(
+            f"""
         ```python
         {rendered_template}
         ```
-        """)
+        """
+        )
 
         # solara.Text(rendered_template)
 
@@ -139,9 +152,7 @@ def FilePicker(on_pick):
         on_pick(str(path))
 
     solara.FileBrowser(
-        directory=current_dir,
-        on_file_open=on_file_open,
-        can_select=False
+        directory=current_dir, on_file_open=on_file_open, can_select=False
     )
 
 
@@ -164,7 +175,6 @@ def FileDrop():
     if content:
         solara.Info(f"File {filename} has total length: {size}\n, first 100 bytes:")
         solara.Preformatted("\n".join(textwrap.wrap(repr(content))))
-
 
 
 @solara.component
@@ -207,8 +217,10 @@ def FileLoadPage():
 
     def get_files():
         data_dir_fp = os.path.join(os.getcwd(), "sample_data_structures")
-        allowed_extensions = ('.json', '.csv', '.yaml', '.yml')
-        return [f for f in os.listdir(data_dir_fp) if f.lower().endswith(allowed_extensions)]
+        allowed_extensions = (".json", ".csv", ".yaml", ".yml")
+        return [
+            f for f in os.listdir(data_dir_fp) if f.lower().endswith(allowed_extensions)
+        ]
 
     def load_file(file_name):
         filename.set(file_name)
@@ -217,18 +229,18 @@ def FileLoadPage():
         file_extension = os.path.splitext(file_name)[1].lower()
 
         try:
-            if file_extension == '.csv':
+            if file_extension == ".csv":
                 solara.Text("File is CSV")
                 df = pd.read_csv(file_fp)
                 set_file_content(df)
-            elif file_extension == '.json':
+            elif file_extension == ".json":
                 solara.Text("File is JSON")
-                with open(file_fp, 'r') as f:
+                with open(file_fp, "r") as f:
                     data = json.load(f)
                 set_file_content(data)
-            elif file_extension in ('.yaml', '.yml'):
+            elif file_extension in (".yaml", ".yml"):
                 solara.Text("File is YAML")
-                with open(file_fp, 'r') as f:
+                with open(file_fp, "r") as f:
                     data = yaml.safe_load(f)
                 set_file_content(data)
         except Exception as e:
@@ -254,10 +266,8 @@ def FileLoadPage():
             data.set(file_content)
 
 
-
 @solara.component
 def Page():
-
     """
     Main Function of the script which defines the areas of the web App
     - Left pane (sidebar)
@@ -277,7 +287,7 @@ def Page():
         # Specify the path to your local image
         # image_file = "openart-image_5IOK-dXK_1728224733825_raw.png"
         image_file = random.choice(png_files)
-        image_fp = os.path.join(os.getcwd(),"images", image_file)
+        image_fp = os.path.join(os.getcwd(), "images", image_file)
         image_path = pathlib.Path(image_fp)
 
         # Display the image in the sidebar
@@ -289,7 +299,7 @@ def Page():
         FileLoadPage()
 
         # used to display Solara state
-        #StateDisplay()
+        # StateDisplay()
 
         loaded_data = data.value
 
@@ -318,23 +328,37 @@ def Page():
                     solara.Markdown("---")
                     solara.Info("Data in File")
 
+                    pretty_data = pprint.pformat(loaded_data, indent=2)
+                    markdown_text = f"```python\n{pretty_data}\n```"
+
                     # If the data is a string create a Jinja2 template
                     if type(loaded_data) == str:
-                        solara.Markdown(f"Variable **{variable_name}** is of type 'String'<br>")
+                        solara.Markdown(
+                            f"Variable **{variable_name}** is of type 'String'<br>"
+                        )
                         solara.Text(loaded_data)
 
                     # If its a list, iterate over the list elements
                     if type(loaded_data) == list:
-                        solara.Markdown(f"Variable **{variable_name}** is of type 'List'<br>")
-                        solara.Text(str(loaded_data))
+                        solara.Markdown(
+                            f"Variable **{variable_name}** is of type 'List'<br>"
+                        )
+                        # solara.Text(str(loaded_data))
+                        solara.Markdown(markdown_text)
 
                     if type(loaded_data) == dict:
-                        solara.Markdown(f"Variable **{variable_name}** is of type 'Dict'<br>")
-                        solara.Text(str(loaded_data))
+                        solara.Markdown(
+                            f"Variable **{variable_name}** is of type 'Dict'<br>"
+                        )
+                        # solara.Text(str(loaded_data))
+                        solara.Markdown(markdown_text)
 
                     if isinstance(loaded_data, pd.DataFrame):
-                        solara.Markdown(f"Variable **{variable_name}** is of type 'pd.DataFrame'<br>")
-                        solara.DataFrame(loaded_data)
+                        solara.Markdown(
+                            f"Variable **{variable_name}** is of type 'pd.DataFrame'<br>"
+                        )
+                        # solara.Text(str(loaded_data))
+                        solara.Markdown(markdown_text)
 
                 # ----------------------------------------------------------------------------------------------------
                 # Second column
@@ -420,8 +444,8 @@ Iterating through list (formerly a dataframe)
 
                         """
 
-                        print(converted_loaded_data)
-                        print(lod)
+                        # print(converted_loaded_data)
+                        # print(lod)
 
                         # Display the template string
                         solara.Markdown(f"```bash\n{template_str}\n```")
@@ -429,9 +453,6 @@ Iterating through list (formerly a dataframe)
                     if template_str:
                         template_string.set(template_str)
                         SaveToFile()
-
-
-
 
             # Content below the side-by-side areas
             solara.Success("Rendered Template")
@@ -449,4 +470,3 @@ Iterating through list (formerly a dataframe)
 
 # The following line is required only when running the code in a Jupyter notebook:
 # Page()
-
