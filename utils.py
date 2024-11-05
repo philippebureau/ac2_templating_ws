@@ -405,6 +405,7 @@ def replace_special_chars(text):
     # Replace spaces and special characters with underscores
     return re.sub(r'[^a-zA-Z0-9]', '_', text)
 
+
 def main():
     pass
 
