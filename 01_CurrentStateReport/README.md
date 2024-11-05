@@ -13,11 +13,12 @@ The Current State Report mini project illustrates how to turn a JSON payload of 
 
 Specifically, we take the JSON output of a SuzieQ bgp show command and process the data in order to:
 
-- Understand the location of the report and develop an appropraite heading
+- Understand the location of the report and develop an appropriate heading
 - Note if all the sessions are up
 - Note the number of BGP sessions configured
 - Detail if the sessions are iBGP or eBGP (including count of each)
 - Generate a diagram of the peering relationships with relevant attributes for each (name, vrf, ASN, state)
+- Create a Markdown report for all of this information.
 
 This project will also establish a pattern that will be used throughout the class.  A repository with a templates folder where all the relevant Jinja2 templates can be found.
 This project also illustrates how passing each variable can become too complex.
@@ -31,3 +32,7 @@ will follow this strategy.
 
 - jinja2
 - diagrams
+
+This mini project also starts to use the utils script at the top level of the repository as a module which is imported.
+
+- utils (local module)
