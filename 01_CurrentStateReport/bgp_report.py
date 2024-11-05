@@ -85,7 +85,7 @@ def main():
     env = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"))
 
     # What templates are available in this environment?
-    template_list = env.list_templates()
+    # template_list = env.list_templates()
 
     # Print the list of templates available in the defined environment
     # which is looking at a relative path in the "templates" directory
