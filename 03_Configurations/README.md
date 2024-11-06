@@ -87,12 +87,12 @@ Jinja has two approaches to support this "modularity":
 
 ## Modular - Inheritance (extends) Model
 
-With inheritance you define a base template with {% block <name> %} and child templates 
+With inheritance you define a base template with {% block <name> %} and child templates.
 
 base_switch_config.j2 (base)
 
-- ​	user_interface_config.j2 # child template extends "base_switch_config.j2"
-- ​	tacacs_server_config.j2 # child template extends "base_switch_config.j2"
+- ​	user_interface_config.j2 (child template extends "base_switch_config.j2")
+- ​	tacacs_server_config.j2 (child template extends "base_switch_config.j2")
 
 The price for that is you need one (or more) overarching templates to put it all together.
 
@@ -190,7 +190,7 @@ interface {{ user_interface }}
  spanning-tree bpduguard enable
 ```
 
-I prefer the includes model as its cleaner.  The inheritance model was built to support HTML pages and I find is more cumbersome for developing device configurations but both models can work so it really comes down to what works for you!
+I prefer the includes model as its cleaner (to me).  The inheritance model was built to support HTML pages and I find it is more cumbersome for developing device configurations but both models can work so it really comes down to what works for you!
 
 WARNING
 These templates are for example only. They have not been tested andy may not work!
