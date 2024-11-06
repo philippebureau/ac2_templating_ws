@@ -155,7 +155,7 @@ Usage: ' python modular_sw_cfg_include.py'
 main_switch_config_include.j2 ("scaffolding")
 
 - base_switch_config_include.j2 (base/global configuration section)
-- tacacs_server_config_include.j2 (tacans configuration section)
+- tacacs_server_config_include.j2 (tacacs configuration section)
 - user_interface_config_include.j2 (user interface section)
 
 Includes main template **main_switch_config_include.j2** "bundles" all the sub-templates.
