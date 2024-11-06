@@ -17,4 +17,4 @@ cisco
 *.docx
 *.fld/
 *.pdf
-AutoCon2 alias
+*alias*
