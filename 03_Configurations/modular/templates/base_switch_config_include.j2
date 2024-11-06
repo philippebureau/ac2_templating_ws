@@ -1,13 +1,12 @@
-{# base_switch_config_include.j2 #}
+{#- base_switch_config_include.j2 -#}
 hostname {{ hostname }}
 
 vlan {{ user_vlan }}
  name USER_VLAN
 
-{% block user_interface %}
-{# This block will be filled by including the user interface template #}
-{% endblock %}
+aaa session-id common
+clock timezone EST 10
+clock summer-time EDT recurring 1 Sun Oct 2:00 1 Sun Apr 2:00
+!
+vtp mode off
 
-{% block tacacs_config %}
-{# This block will be filled by including the TACACS template #}
-{% endblock %}
