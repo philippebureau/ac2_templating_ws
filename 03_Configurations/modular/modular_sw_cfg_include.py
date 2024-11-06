@@ -16,9 +16,6 @@ import argparse
 import jinja2
 import os
 
-def some_function():
-    pass
-
 
 def main():
 

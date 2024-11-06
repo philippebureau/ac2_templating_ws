@@ -85,7 +85,7 @@ Jinja has two approaches to support this "modularity":
 1. Inheritance (extends)
 2. includes
 
-### Inheritance (extends)
+## Modular - Inheritance (extends) Model
 
 With inheritance you define a base template with {% block <name> %} and child templates 
 
@@ -115,7 +115,7 @@ vlan {{ user_vlan }}
 
 
 
-Example child template which extends base (above)
+Example child template which extends base (above).
 
 ```python
 {# user_interface_config_extends.j2 #}
@@ -133,9 +133,46 @@ interface {{ user_interface }}
 
 
 
-### Include
+## Modular - Include Model
 
-Includes
+The include method allows you to set up a sort of scaffolding for your templates.
+
+main_switch_config_include.j2 ("scaffolding")
+
+- base_switch_config_include.j2 (base/global configuration section)
+- tacacs_server_config_include.j2 (tacans configuration section)
+- user_interface_config_include.j2 (user interface section)
+
+Includes main template **main_switch_config_include.j2** "bundles" all the sub-templates.
+
+```python
+{# main_switch_config_include.j2 #}
+{% include "base_switch_config_include.j2" %}
+
+Main Switch Configuration Template (Includes)
+
+{% block user_interface %}
+{% include "user_interface_config_include.j2" %}
+{% endblock %}
+
+{% block tacacs_config %}
+{% include "tacacs_server_config_include.j2" %}
+{% endblock %}
+```
+
+Example sub-template:
+
+```python
+{#- user_interface_config_include.j2 -#}
+interface {{ user_interface }}
+ description User Access Port
+ switchport mode access
+ switchport access vlan {{ user_vlan }}
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+```
+
+I prefer the includes model as its cleaner.  The inheritance model was built to support HTML pages and I find is more cumbersome for developing device configurations but both models can work so it really comes down to what works for you!
 
 WARNING
 These templates are for example only. They have not been tested andy may not work!
@@ -145,3 +182,5 @@ These templates are for example only. They have not been tested andy may not wor
 ### Modules
 
 - jinja2
+
+  
