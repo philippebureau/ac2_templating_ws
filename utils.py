@@ -406,6 +406,30 @@ def replace_special_chars(text):
     return re.sub(r"[^a-zA-Z0-9]", "_", text)
 
 
+def set_os_env(var_name, var_value):
+    """
+    Sets an environment variable using the Python built in os module
+
+    :param var_name:
+    :param var_value:
+    :return:
+    """
+    os.environ[var_name] = var_value
+
+
+def get_os_env(var_name):
+    """
+    Returns the requested environment variable
+    :param var_name: the environment variable to fetch from memory
+    :return: the variable or blank string
+    """
+
+    try:
+        return os.environ[var_name]
+    except:
+        return ""
+
+
 def main():
     pass
 
