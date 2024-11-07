@@ -17,6 +17,7 @@ import os
 import sys
 import pprint
 import webbrowser
+import getpass
 
 import utils_snow_vault
 
@@ -30,11 +31,11 @@ sys.path.append(parent_dir)
 import utils
 
 
-def some_function():
-    pass
-
-
 def main():
+    """
+
+    :return:
+    """
 
     payload_data = utils.load_csv(arguments.payload_file)
 
@@ -90,11 +91,9 @@ def main():
 
         print(f"Saved resulting CR file in current directory to {filename}")
 
-        if arguments.create_cr:
+        if arguments.create_cr and arguments.password:
             # Need to create CR in SNOW
-
             #     keys = ["instance", "username", "password", "template", "short_desc", "desc", "test_plan", ]
-
             cr_payload = {
                 "short_desc": "AC2 CdL Vlan Work",
                 "desc": rendered_string,
@@ -103,26 +102,30 @@ def main():
                 "implementation_plan": "Just do it",
                 "risk_impact_analysis": "net new so risk minimal, no active users",
                 "backout_plan": "undo the work",
-
             }
-            resp = utils.create_std_cr_snow(
-                cr_payload
-            )
+            resp = utils.create_std_cr_snow(cr_payload)
 
             if resp:
 
                 resp_dict = resp.json()
-                url_top = "https://dev255920.service-now.com/"
+                url_top = f"https://{arguments.snow_pdi}/"
 
                 # Open default browser to Service Now URL
                 webbrowser.open(url_top)
 
-                print(f"Created Standard Change Request {resp_dict['result']['task_effective_number']}")
+                print(
+                    f"Created Standard Change Request {resp_dict['result']['task_effective_number']}"
+                )
                 # print(resp.url)
                 # print(resp.links)
 
             else:
                 print("Limited response returned")
+        else:
+            if not arguments.password:
+                print(
+                    f"ERROR! Please enter a password (-p) for SNOW PDI and update the username )-u_ if its not 'admin'"
+                )
 
 
 # Standard call to the main() function.
@@ -132,18 +135,39 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "-p",
+        "-f",
         "--payload_file",
-        help="Change details payload file",
+        help="Change details payload file. Default is payload.csv in current directory",
         action="store",
         default="payload.csv",
     )
     parser.add_argument(
         "-c",
         "--create_cr",
-        help="Create Change Request in SNOW",
-        action="store_true",
+        help="Create Change Request in SNOW. Default is False so no CR in SNOW will be created.",
+        action='store_true',
         default=False,
+    )
+    parser.add_argument(
+        "-s",
+        "--snow_pdi",
+        help="Service Now (SNOW) Personal Developer Instance.",
+        action="store",
+        default="dev224081.service-now.com",
+    )
+    parser.add_argument(
+        "-u",
+        "--username",
+        help="Service Now (SNOW) Personal Developer Instance Username. Default: admin",
+        action="store",
+        default="admin",
+    )
+    parser.add_argument(
+        "-p",
+        "--password",
+        help="Service Now (SNOW) Personal Developer Instance password. ",
+        action="store",
+        default="",
     )
     arguments = parser.parse_args()
     main()
