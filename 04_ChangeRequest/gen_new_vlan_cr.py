@@ -16,10 +16,10 @@ import argparse
 import os
 import sys
 import pprint
+import json
 import webbrowser
-import getpass
+import requests
 
-import utils_snow_vault
 
 # This is necessary because I want to import functions in a file called utils.py and that file is one level up
 # from here
@@ -31,8 +31,57 @@ sys.path.append(parent_dir)
 import utils
 
 
+def create_std_cr_snow(
+    instance,
+    username,
+    password,
+    payload,
+    template_id="b9c8d15147810200e90d87e8dee490f6",
+):
+
+    """
+
+    Given the FQDN of a live Service Now Personal Developer Instance and the accompanying credentials,
+    this function will create a change request with the provided payload.
+
+    :param instance: FQDN of developer instance
+    :param username: instance username
+    :param password: instance password
+    :param payload: ticket payload
+    :param template_id: SNOW CR template ID
+    :return:
+    """
+
+
+    # ServiceNow instance details
+
+    # API endpoint
+    url = f"https://{instance}/api/now/table/change_request"
+
+    # Headers
+    headers = {"Content-Type": "application/json", "Accept": "application/json"}
+
+    # Send POST request
+    response = requests.post(
+        url, auth=(username, password), headers=headers, data=json.dumps(payload)
+    )
+
+    # Check response
+    # A 201 status code is returned when a new resource is created
+    if response.status_code == 201:
+        print(f"Standard Change Request created successfully: {response.status_code}")
+        # pprint.pprint(response.json())
+    else:
+        print(f"Error creating Standard Change Request: {response.status_code}")
+        # print(response.text)
+
+    return response
+
+
 def main():
     """
+    This script will load new vlan payload information in a CSV file and create text describing the desired work
+    to enable the vlan and its SVI.
 
     :return:
     """
@@ -95,15 +144,23 @@ def main():
             # Need to create CR in SNOW
             #     keys = ["instance", "username", "password", "template", "short_desc", "desc", "test_plan", ]
             cr_payload = {
-                "short_desc": "AC2 CdL Vlan Work",
-                "desc": rendered_string,
+                "short_description": f"AC2 CdL Vlan Work Set new Vlan {details_dict['new_vlan']} for subnet {details_dict['subnet_cidr']} on {details_dict['gateway_device']} ",
+                "description": rendered_string,
                 "test_plan": "ping",
                 "justification": "Building automation project",
                 "implementation_plan": "Just do it",
                 "risk_impact_analysis": "net new so risk minimal, no active users",
                 "backout_plan": "undo the work",
+                "template_id": "b9c8d15147810200e90d87e8dee490f6",
             }
-            resp = utils.create_std_cr_snow(cr_payload)
+
+            utils.set_os_env("pdi_uname", arguments.username)
+            utils.set_os_env("pdi_pwd", arguments.password)
+
+            username = utils.get_os_env("pdi_uname")
+            password = utils.get_os_env("pdi_pwd")
+
+            resp = create_std_cr_snow(arguments.snow_pdi, username, password, cr_payload)
 
             if resp:
 
@@ -145,13 +202,13 @@ if __name__ == "__main__":
         "-c",
         "--create_cr",
         help="Create Change Request in SNOW. Default is False so no CR in SNOW will be created.",
-        action='store_true',
+        action="store_true",
         default=False,
     )
     parser.add_argument(
         "-s",
         "--snow_pdi",
-        help="Service Now (SNOW) Personal Developer Instance.",
+        help="Service Now (SNOW) Personal Developer Instance. Default: 'dev224081.service-now.com'",
         action="store",
         default="dev224081.service-now.com",
     )
@@ -165,7 +222,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-p",
         "--password",
-        help="Service Now (SNOW) Personal Developer Instance password. ",
+        help="Service Now (SNOW) Personal Developer Instance password. Default: empty string",
         action="store",
         default="",
     )

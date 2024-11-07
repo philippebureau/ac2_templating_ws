@@ -7,22 +7,27 @@ By default the `gen_new_vlan_cr.py` script will load the data in the file `paylo
 
 ```python
 % python gen_new_vlan_cr.py -h
-usage: gen_new_vlan_cr.py [-h] [-p PAYLOAD_FILE] [-c] [-s SNOW_PDI]
+usage: gen_new_vlan_cr.py [-h] [-f PAYLOAD_FILE] [-c] [-s SNOW_PDI] [-u USERNAME] [-p PASSWORD]
 
 Script Description
 
 options:
   -h, --help            show this help message and exit
-  -p PAYLOAD_FILE, --payload_file PAYLOAD_FILE
+  -f PAYLOAD_FILE, --payload_file PAYLOAD_FILE
                         Change details payload file. Default is payload.csv in current directory
   -c, --create_cr       Create Change Request in SNOW. Default is False so no CR in SNOW will be created.
   -s SNOW_PDI, --snow_pdi SNOW_PDI
-                        Service Now (SNOW) Personal Developer Instance.
+                        Service Now (SNOW) Personal Developer Instance. Default: 'dev224081.service-now.com'
+  -u USERNAME, --username USERNAME
+                        Service Now (SNOW) Personal Developer Instance Username. Default: admin
+  -p PASSWORD, --password PASSWORD
+                        Service Now (SNOW) Personal Developer Instance password. Default: empty string
 
 Usage: ' python gen_new_vlan_cr.py'
+
 ```
 
-Executing the script with all the default:
+Executing the script with all the default values (and no Service Now CR creation):
 
 ```python
 % python gen_new_vlan_cr.py   
@@ -49,27 +54,32 @@ Requesting completion by: 2024-11-12
 
 With the default values, the script merely generates the text of the request which could be emailed or pasted into a Change Request system.
 
-Using the `-c` option 
+### Creating a Service Now Change Request
 
+Using the `-c` option will execute the portion of the script which creates a Service Now Change Request ticket.
 
+When the -c option is used, the -p option is required and the -u option can also be used to change the username.
 
-Personal Instance of Service Now
+```python
+% python gen_new_vlan_cr.py -c -s "dev224081.service-now.com" -p "PDI SNOW PWD"
+Saved resulting CR file in current directory to LAX_Campus_NewVlan300_SNOW_STDCR.txt
+Standard Change Request created successfully: 201
+Created Standard Change Request CHG0030014
+```
 
-https://developer.servicenow.com/dev.do#!/home
-
-Instance Washington DC
-
-
-
-https://developer.servicenow.com/dev.do
-
-
-
-https://claude.site/artifacts/451f0a4b-fc2a-472a-bfe2-393b00e7b2ea
+![Screen Shot 2024-11-07 at 7.27.19 AM](./images/Screen Shot 2024-11-07 at 7.27.19 AM.png)
 
 ## Creating a ServiceNow (SNOW) Personal Developer Instance for Testing
 
-https://www.perplexity.ai/page/creating-a-servicenow-develope-k17hf2WyQWGAOL_SniG4zA
+
+
+Personal Developer Instance of Service Now
+
+https://developer.servicenow.com/dev.do
+
+Installation [Guidance](https://www.perplexity.ai/page/creating-a-servicenow-develope-k17hf2WyQWGAOL_SniG4zA)
+
+
 
 
 
