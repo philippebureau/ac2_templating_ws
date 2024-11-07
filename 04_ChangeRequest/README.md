@@ -80,51 +80,6 @@ https://developer.servicenow.com/dev.do
 Installation [Guidance](https://www.perplexity.ai/page/creating-a-servicenow-develope-k17hf2WyQWGAOL_SniG4zA)
 
 
-
-
-
-## Credential Management with HasiCorp Vault
-
-There are a number of ways to protect keys and credentials.  My favorite include:
-
-- python-dotenv
-- os (Python built in os module)
-- HashiCorp Vault
-
-For more invormation see [How Network Engineers Can Manage Credentials and Keys More Securely in Python](https://gratuitous-arp.net/managing-credentials-and-keys-more-securely-in-python-for-network-engineers/).
-
-This mini project will use a developer instance of Vault to store the credentials for our SNOW instance.
-
-Start the development server for testing.
-
-```bash
-# Start the vault server locally in developer mode for testing
-vault server -dev
-```
-
-Get your environment ready to interact via CLI
-
-```bash
-export VAULT_ADDR='http://127.0.0.1:8200'
-export VAULT_TOKEN='Vault Token Provided when you run the server'
-# Check Vault Status
-vault status
-# 
-vault secrets enable -path=secret kv-v2
-# Set the credential in the vault Note the path in "put"
-vault kv put secret/pdi_snow username="admin" password="SNOW_PDI_PWD"
-# View the credential at the specified path provided to "get"
-vault kv get secret/pdi_snow
-```
-
-
-[Additional Installation Guidance](https://www.perplexity.ai/page/installing-and-running-hashico-mngYF1K_R.CFZO_hPrFc.g)
-
-
-
-
-
-
 ---
 ### Modules
 
