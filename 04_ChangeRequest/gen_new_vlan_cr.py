@@ -178,11 +178,11 @@ def main():
 
             else:
                 print("Limited response returned")
-        else:
-            if not arguments.password:
-                print(
-                    f"ERROR! Please enter a password (-p) for SNOW PDI and update the username )-u_ if its not 'admin'"
-                )
+
+        if arguments.create_cr and not arguments.password:
+            print(
+                f"ERROR! Please enter a password (-p) for SNOW PDI and update the username (-u) if its not 'admin'"
+            )
 
 
 # Standard call to the main() function.
