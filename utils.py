@@ -27,6 +27,10 @@ import ipaddress
 import itertools
 
 
+# Disable  Unverified HTTPS request is being made to host messages
+requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
+
+
 def is_user_intf(intf):
     """
     Cisco centric interface test to see if an interface is a user interface
@@ -428,6 +432,107 @@ def get_os_env(var_name):
         return os.environ[var_name]
     except:
         return ""
+
+
+def try_sq_rest_call(uri_path, url_options, debug=False):
+    """
+    SuzieQ API REST Call
+
+    """
+
+    API_ACCESS_TOKEN = os.getenv('SQ_API_TOKEN')
+    API_ENDPOINT = "ac2-suzieq.cloudmylab.net"
+
+    url = f"https://{API_ENDPOINT}:8443{uri_path}?{url_options}"
+
+    payload = "\r\n"
+    headers = {
+        'Content-Type': 'text/plain',
+        'Authorization': f'Bearer {API_ACCESS_TOKEN}'
+    }
+
+    if debug:
+        print(f"URL is {url}")
+
+    # Send API request, return as JSON
+    response = dict()
+    try:
+        # response = requests.get(url).json()
+        response = requests.get(url, headers=headers, data=payload, verify=False)
+
+    except Exception as e:
+        print(e)
+        print(
+            "Connection to SuzieQ REST API Failed.  Please confirm the REST API is running!"
+        )
+        print(e)
+        # st.stop()
+        response = False
+
+    if debug:
+        print(f"Response is {response}")
+        if response.json():
+            print(response.json())
+        else:
+            print("No data returned for REST call")
+
+    # Returns full response object
+    return response
+
+
+def get_namespace_list():
+
+    # Initialize
+    namespace_list = list()
+
+    # Trick to get a unique list of namespaces for the pull down
+    URI_PATH = "/api/v2/device/unique"
+    URL_OPTIONS = f"columns=namespace&ignore_neverpoll=true"
+    ns_response = try_sq_rest_call(URI_PATH, URL_OPTIONS)
+
+    # Create a list of namespaces from the list of dictionaries
+    if ns_response.status_code == 200:
+        if ns_response.json():
+            namespace_list = [line["namespace"] for line in ns_response.json()]
+    else:
+        print(f"Problem with accessing SuzieQ REST API")
+        print(f"OK Response: {ns_response.ok}")
+        print(f"Status Code: {ns_response.status_code}")
+        print(f"Reason: {ns_response.reason}")
+        print(ns_response.json())
+
+    return namespace_list
+
+
+def get_topology(namespace, via="lldp"):
+
+    URI_PATH = "/api/v2/topology/show"
+    URL_OPTIONS = f"view=latest&namespace={namespace}&columns=default&via={via}&reverse=false"
+
+    # https://172.16.14.4:8443/api/v2/topology/show?view=latest&namespace=GDL_Campus&columns=default&via=lldp&reverse=false
+
+    response = try_sq_rest_call(URI_PATH, URL_OPTIONS, debug=False)
+
+    # Create a list of namespaces from the list of dictionaries
+    if response.status_code == 200:
+        pass
+        # if response.json():
+            # print(response.json())
+    else:
+        print(f"Problem with accessing SuzieQ REST API")
+        print(f"OK Response: {response.ok}")
+        print(f"Status Code: {response.status_code}")
+        print(f"Reason: {response.reason}")
+        print(response.json())
+
+    return response
+
+
+def extract_numeric_portion(interface):
+    match = re.search(r'\d+(?:/\d+)*$', interface)
+    if match:
+        return match.group(0)
+    return None
 
 
 def main():
