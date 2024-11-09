@@ -50,7 +50,24 @@ In this project, we will use a local YAML file to store the design data required
 
 ---
 #### Modules
-pip uninstall -r requirements.txt -y
+
+Use the requirements.txt file to build your virtual environment
+``` 
+# Create a virtual environment
+# If you do this within the top level of your repository you will see a new directory called ac2-venv which will hold your virtual environment
+python -m venv ac2-venv
+
+# Activate your virtual environment 
+# Windows
+ac2-venv\Source\Activate.bat (or .ps1)
+#Mac/Linux
+source ./ac2-venv/bin/activate
+
+# Building the virtual environment
+pip install -r requirements.txt
+
+```
+
 
 pip install jinja2
 
@@ -63,3 +80,12 @@ pip install pyyaml
 pip install pandas
 
 pip install diagrams
+
+pip install httpx
+
+pip install python-dotenv
+
+
+#### Uninstall all
+
+``` pip uninstall -r requirements.txt -y ```

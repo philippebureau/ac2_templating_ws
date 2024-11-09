@@ -20,6 +20,7 @@ import yaml
 import json
 import hvac
 import jinja2
+import dotenv
 import argparse
 import datetime
 import requests
@@ -219,7 +220,7 @@ def jenv_filesystem(
     :return: the jinja2 environment object containing all the templates in the provided directory
     """
 
-    valid_line_comment_prefixes = ["//", "#", ";", "--", "##", "=", "=="]
+    valid_line_comment_prefixes = ["//", "#", ";", "--", "##", "=", "==", "!"]
     # In case an invalid or blank line comment is provided to the function
     if line_comment not in valid_line_comment_prefixes:
         line_comment = "##"
@@ -261,7 +262,7 @@ def load_jtemplate(jenv_obj, template_file_name):
 
 
 def render_in_one(
-    template_file_name, payload_dict, search_dir="templates", line_comment="#"
+    template_file_name, payload_dict, search_dir="templates", line_comment="!"
 ):
     """
     Inspired by:
@@ -275,7 +276,12 @@ def render_in_one(
     :return: rendered text as a string (class 'str')
     """
 
-    jenv = jenv_filesystem(search_dir=search_dir, line_comment="#")
+    valid_line_comment_prefixes = ["//", "#", ";", "--", "##", "=", "==", "!"]
+    # In case an invalid or blank line comment is provided to the function
+    if line_comment not in valid_line_comment_prefixes:
+        line_comment = "##"
+
+    jenv = jenv_filesystem(search_dir=search_dir, line_comment=line_comment)
 
     jtemplate = load_jtemplate(jenv, template_file_name=template_file_name)
 
@@ -440,6 +446,9 @@ def try_sq_rest_call(uri_path, url_options, debug=False):
 
     """
 
+    # Load Environment variables from .env containing Suzieq REST API Token
+    dotenv.load_dotenv()
+
     API_ACCESS_TOKEN = os.getenv('SQ_API_TOKEN')
     API_ENDPOINT = "ac2-suzieq.cloudmylab.net"
 
@@ -529,10 +538,68 @@ def get_topology(namespace, via="lldp"):
 
 
 def extract_numeric_portion(interface):
+    """
+    Used in the Containerlab topology build to extract the numeric portion of an interface
+
+    :param interface:
+    :return:
+    """
+
     match = re.search(r'\d+(?:/\d+)*$', interface)
     if match:
         return match.group(0)
     return None
+
+
+def check_critical_vlan(vlanx, nsx, debug=False):
+    """
+    Check that a given vlanx is not in the critical_vlan extdb.
+    If it is a critical vlan then it cannot be changed via self-service.
+
+    Return True if it is a critical vlan and False if not
+
+    """
+
+    # https://server.uwaco.com:8443/api/v2/extdb/show?ext_table=critical_vlans&view=latest&namespace=GDL_Campus
+    # &columns=default&reverse=false&include_deleted=false&show_exceptions=false
+
+    URI_PATH = "/api/v2/extdb/show"
+
+    URL_OPTIONS = f"ext_table=critical_vlans&view=latest&namespace={nsx}&columns=default&reverse=false&include_deleted=false&show_exceptions=false"
+
+    # Send API request, return as JSON
+    sq_api_response = try_sq_rest_call(URI_PATH, URL_OPTIONS, debug=debug)
+    if debug:
+        print(f"check_critical_vlan passed {vlanx} and namespace {nsx}")
+        print(URI_PATH)
+        print(URL_OPTIONS)
+
+    return sq_api_response
+
+
+def get_extdb(extdbx, nsx, debug=False):
+    """
+
+    :param extdb:
+    :param nsx:
+    :param debug:
+    :return:
+    """
+
+    # https://server.uwaco.com:8443/api/v2/extdb/show?ext_table=critical_vlans&view=latest&namespace=1420_Dubai
+    # &columns=default&reverse=false&include_deleted=false&show_exceptions=false
+
+    URI_PATH = "/api/v2/extdb/show"
+
+    URL_OPTIONS = f"ext_table={extdbx}&view=latest&namespace={nsx}&columns=default&reverse=false&include_deleted=false&show_exceptions=false"
+
+    # Send API request, return as JSON
+    sq_api_response = try_sq_rest_call(URI_PATH, URL_OPTIONS, debug=debug)
+    if debug:
+        print(URI_PATH)
+        print(URL_OPTIONS)
+
+    return sq_api_response
 
 
 def main():
