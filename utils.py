@@ -29,7 +29,9 @@ import itertools
 
 
 # Disable  Unverified HTTPS request is being made to host messages
-requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
+requests.packages.urllib3.disable_warnings(
+    requests.packages.urllib3.exceptions.InsecureRequestWarning
+)
 
 
 def is_user_intf(intf):
@@ -449,15 +451,15 @@ def try_sq_rest_call(uri_path, url_options, debug=False):
     # Load Environment variables from .env containing Suzieq REST API Token
     dotenv.load_dotenv()
 
-    API_ACCESS_TOKEN = os.getenv('SQ_API_TOKEN')
+    API_ACCESS_TOKEN = os.getenv("SQ_API_TOKEN")
     API_ENDPOINT = "ac2-suzieq.cloudmylab.net"
 
     url = f"https://{API_ENDPOINT}:8443{uri_path}?{url_options}"
 
     payload = "\r\n"
     headers = {
-        'Content-Type': 'text/plain',
-        'Authorization': f'Bearer {API_ACCESS_TOKEN}'
+        "Content-Type": "text/plain",
+        "Authorization": f"Bearer {API_ACCESS_TOKEN}",
     }
 
     if debug:
@@ -516,7 +518,9 @@ def get_namespace_list():
 def get_topology(namespace, via="lldp"):
 
     URI_PATH = "/api/v2/topology/show"
-    URL_OPTIONS = f"view=latest&namespace={namespace}&columns=default&via={via}&reverse=false"
+    URL_OPTIONS = (
+        f"view=latest&namespace={namespace}&columns=default&via={via}&reverse=false"
+    )
 
     # https://172.16.14.4:8443/api/v2/topology/show?view=latest&namespace=GDL_Campus&columns=default&via=lldp&reverse=false
 
@@ -526,7 +530,7 @@ def get_topology(namespace, via="lldp"):
     if response.status_code == 200:
         pass
         # if response.json():
-            # print(response.json())
+        # print(response.json())
     else:
         print(f"Problem with accessing SuzieQ REST API")
         print(f"OK Response: {response.ok}")
@@ -545,12 +549,13 @@ def extract_numeric_portion(interface):
     :return:
     """
 
-    match = re.search(r'\d+(?:/\d+)*$', interface)
+    match = re.search(r"\d+(?:/\d+)*$", interface)
     if match:
         return match.group(0)
     return None
 
 
+# ------------------ SUZIEQ EXTERNAL DB TABLE API CALLS --------------------------------
 def check_critical_vlan(vlanx, nsx, debug=False):
     """
     Check that a given vlanx is not in the critical_vlan extdb.
@@ -579,11 +584,12 @@ def check_critical_vlan(vlanx, nsx, debug=False):
 
 def get_extdb(extdbx, nsx, debug=False):
     """
+    This function pulls the data from the given namespace in the given external db table
 
     :param extdb:
     :param nsx:
     :param debug:
-    :return:
+    :return: the response dictionary including the .json() data
     """
 
     # https://server.uwaco.com:8443/api/v2/extdb/show?ext_table=critical_vlans&view=latest&namespace=1420_Dubai
@@ -611,8 +617,5 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Script Description", epilog="Usage: ' python utils' "
     )
-
-    # parser.add_argument('all', help='Execute all exercises in week 4 assignment')
-    # parser.add_argument('-a', '--all', help='Execute all exercises in week 4 assignment', action='store_true',default=False)
     arguments = parser.parse_args()
     main()
