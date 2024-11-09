@@ -22,3 +22,7 @@ cisco
 *combined*
 *.xlsx
 .env
+utils_snow_vault.py
+free*
+vyos*
+*.webp
