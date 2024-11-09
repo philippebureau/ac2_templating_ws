@@ -76,18 +76,6 @@ def main():
 # Standard call to the main() function.
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Script Description",
-                                     epilog="Usage: ' python sample_modular.py' ")
-
-    # parser.add_argument('all', help='Execute all exercises in week 4 assignment')
-    # parser.add_argument('-a', '--all', help='Execute all exercises in week 4 assignment', action='store_true',default=False)
-    arguments = parser.parse_args()
-    main()
-
-
-
-# Standard call to the main() function.
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Script Description",
                                      epilog="Usage: ' python modular_sw_cfg.py' ")
 
     # parser.add_argument('all', help='Execute all exercises in week 4 assignment')
