@@ -16,6 +16,7 @@ __license__ = "Python"
 import os
 import sys
 import pandas as pd
+import datetime
 import streamlit as st
 
 
@@ -62,6 +63,13 @@ VLAN {vlan_id} should be
 
 def main():
 
+    # Date stamp for Report if one already exists
+    file_timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+
+    # Format as human-readable string
+    human_readable = datetime.datetime.now().strftime("%B %d, %Y at %I:%M %p")
+
+
     selected_switches = list()
     namespace_list = list()
     selected_ns = list()
@@ -73,11 +81,11 @@ def main():
     st.title("Vlan Provisioning Verification Tool")
 
     # Initialize session state for inputs
-    if 'namespace' not in st.session_state:
+    if "namespace" not in st.session_state:
         st.session_state.namespace = ""
-    if 'device_list' not in st.session_state:
+    if "device_list" not in st.session_state:
         st.session_state.device_list = list()
-    if 'vlan_id' not in st.session_state:
+    if "vlan_id" not in st.session_state:
         st.session_state.vlan_id = 1
 
     # Create two columns for inputs
@@ -133,6 +141,7 @@ def main():
 
     selected_switches = st.session_state.device_list
     vlan_id = st.session_state.vlan_id
+    location = st.session_state.namespace
 
     if selected_switches and vlan_id != 1:
 
@@ -140,8 +149,14 @@ def main():
         if st.button("Verify Configuration"):
 
             st.header("Configuration Report")
-            report = generate_report(selected_switches, vlan_id)
-            st.markdown(report)
+            header_summary = generate_report(selected_switches, vlan_id)
+            st.markdown(header_summary)
+
+            rpt_dict = dict()
+
+            rpt_dict.update({"timestamp": human_readable})
+            rpt_dict.update({"vlan_id": vlan_id})
+            rpt_dict.update({"location": location})
 
             vlan_configured_bool = True
             stp_root_bool = True
@@ -171,21 +186,44 @@ def main():
                 st.write(df)
 
             if vlan_configured_bool:
-                st.success(f":thumbsup: Vlan {vlan_id} is configured on all switches!")
+                msg = f":thumbsup: Vlan {vlan_id} is configured on all switches!"
+                st.success(msg)
             else:
-                st.error(f":thumbsdown: CONFIGURATION is INCOMPLETE.  {len(sw_missing_vlan_list)} switch(s) missing vlan {vlan_id}")
+                msg = f":thumbsdown: CONFIGURATION is INCOMPLETE.  {len(sw_missing_vlan_list)} switch(s) missing vlan {vlan_id}"
+                st.error(msg)
                 for sw in sw_missing_vlan_list:
                     st.write(f"- {sw}")
+            rpt_dict.update({"vlan_cfg": msg})
 
             if stp_root_bool:
-                st.success(f":thumbsup: Vlan {vlan_id} has root on all switches!")
+                msg = f":thumbsup: Vlan {vlan_id} has root on all switches!"
+                st.success(msg)
             else:
                 # TODO: Check to see if it IS the root!
-                st.error(f":thumbsdown: STP ERROR.  {len(stp_problem_list)} switch(s) without STP root on vlan {vlan_id}")
+                msg = f":thumbsdown: STP ERROR.  {len(stp_problem_list)} switch(s) without STP root on vlan {vlan_id}"
+                st.error(msg)
                 for sw in stp_problem_list:
                     st.write(f"- {sw}")
-
+            rpt_dict.update({"stp_root": msg})
             # TODO: Check to see if the vlan name is per guideline (has the subnet)
+
+            rpt_dict.update({"header_summary": header_summary})
+
+
+            template = "stp_verification_template.j2"
+
+            # Define the filename
+            filename = (
+                f"{st.session_state.namespace}_STP_Verification_{file_timestamp}.md"
+            )
+            # Create the full path to the new file
+            verification_rpt_fp = os.path.join(os.getcwd(), filename)
+
+            rendered = utils.render_in_one(template, rpt_dict)
+
+            # Save the rendered content to the file
+            utils.save_file(verification_rpt_fp, rendered)
+            st.info(f"Saved installation Markdown file to {verification_rpt_fp}")
 
 
 if __name__ == "__main__":
