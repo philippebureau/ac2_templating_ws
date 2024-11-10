@@ -654,9 +654,7 @@ def find_vlan_on_switch(vlanx, switchx):
 
 
 def check_stp_switch(vlanx, switch):
-    """
-
-    """
+    """ """
 
     # Set Boolean indicating the provided vlan has root on an interface
     vlan_has_stp_root = False
@@ -671,11 +669,12 @@ def check_stp_switch(vlanx, switch):
     if not re.search("NOT FOUND", switch):
         if sq_api_response.ok:
             for line in response_json:
-                if line['portRole'] == "root":
+                if line["portRole"] == "root":
                     vlan_has_stp_root = True
                     break
 
     return vlan_has_stp_root, sq_api_response
+
 
 def main():
     pass
