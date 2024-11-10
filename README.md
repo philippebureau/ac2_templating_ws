@@ -85,6 +85,7 @@ pip install httpx
 
 pip install python-dotenv
 
+pip install streamlit
 
 #### Uninstall all
 
