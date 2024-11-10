@@ -515,6 +515,30 @@ def get_namespace_list():
     return namespace_list
 
 
+def get_device_list(nsx):
+
+    # Initialize
+    device_list = list()
+
+    # Get unique list of devices in the given namespace
+    URI_PATH = "/api/v2/device/unique"
+    URL_OPTIONS = f"namespace={nsx}&columns=hostname&ignore_neverpoll=true"
+    response = try_sq_rest_call(URI_PATH, URL_OPTIONS, debug=False)
+
+    # Create a list of namespaces from the list of dictionaries
+    if response.status_code == 200:
+        if response.json():
+            device_list = [line["hostname"] for line in response.json()]
+    else:
+        print(f"Problem with accessing SuzieQ REST API")
+        print(f"OK Response: {response.ok}")
+        print(f"Status Code: {response.status_code}")
+        print(f"Reason: {response.reason}")
+        print(response.json())
+
+    return device_list
+
+
 def get_topology(namespace, via="lldp"):
 
     URI_PATH = "/api/v2/topology/show"
@@ -607,6 +631,51 @@ def get_extdb(extdbx, nsx, debug=False):
 
     return sq_api_response
 
+
+def find_vlan_on_switch(vlanx, switchx):
+    vlan_configured_on_sw = False
+
+    URI_PATH = "/api/v2/vlan/show"
+    URL_OPTIONS = f"hostname={switchx}&view=latest&columns=default&vlan={vlanx}"
+
+    sq_api_response = try_sq_rest_call(URI_PATH, URL_OPTIONS, debug=False)
+
+    if not re.search("NOT FOUND", switchx):
+        if sq_api_response.json():
+            vlan_configured_on_sw = True
+        else:
+            pass
+            # print(f"Vlan {vlanx} is NOT configured on switch {switchx}")
+    else:
+        pass
+        # print("Switch is NOT FOUND")
+
+    return vlan_configured_on_sw, sq_api_response
+
+
+def check_stp_switch(vlanx, switch):
+    """
+
+    """
+
+    # Set Boolean indicating the provided vlan has root on an interface
+    vlan_has_stp_root = False
+
+    URI_PATH = "/api/v2/stp/show"
+    URL_OPTIONS = f"hostname={switch}&view=latest&columns=default&vlan={vlanx}&portType=network&reverse=false&include_deleted=false"
+
+    sq_api_response = try_sq_rest_call(URI_PATH, URL_OPTIONS, debug=False)
+
+    response_json = sq_api_response.json()
+
+    if not re.search("NOT FOUND", switch):
+        if sq_api_response.ok:
+            for line in response_json:
+                if line['portRole'] == "root":
+                    vlan_has_stp_root = True
+                    break
+
+    return vlan_has_stp_root, sq_api_response
 
 def main():
     pass
