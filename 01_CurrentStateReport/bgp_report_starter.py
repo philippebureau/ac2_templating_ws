@@ -30,7 +30,7 @@ import utils
 
 def create_bgp_diagram(bgp_sessions, filename="bgp_sessions", outformat="png"):
     """
-    Given a list of dictionaries in bgp_sessions with local and peer information, draw a digram which
+    Given a list of dictionaries in bgp_sessions with local and peer information, draw a diagram which
     shows each peering session including state and ASN
     :param bgp_sessions:
     :param filename:
