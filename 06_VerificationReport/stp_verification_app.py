@@ -223,7 +223,7 @@ def main():
 
             # Save the rendered content to the file
             utils.save_file(verification_rpt_fp, rendered)
-            st.info(f"Saved installation Markdown file to {verification_rpt_fp}")
+            st.info(f"Saved Verification Markdown file to {verification_rpt_fp}")
 
 
 if __name__ == "__main__":
