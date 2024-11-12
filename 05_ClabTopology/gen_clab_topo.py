@@ -144,9 +144,19 @@ def main():
     pld = dict()
 
     # One option could be to have the user pick from a valid list of namespaces
-    namespaces = utils.get_namespace_list()
+    namespaces, full_response = utils.get_namespace_list()
 
     response = utils.get_topology(arguments.namespace)
+    if response.ok:
+        pass
+    else:
+        print(response)
+        exit(
+            f"\n\nAborting Run! Cannot access SuzieQ API! Status Code: "
+            f"{response.status_code} Reason: {response.reason} "
+            f"\nPlease make sure you have an .env file at the top level of your repository and a valdi token in "
+            f"the environment variable SQ_API_TOKEN. \nRename .env_sample to .env\n\n"
+        )
 
     pld.update({"name": f"{arguments.namespace}_clab_topology"})
     pld.update({"kind": "ceos"})
