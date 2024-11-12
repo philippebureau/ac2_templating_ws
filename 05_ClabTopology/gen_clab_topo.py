@@ -13,15 +13,15 @@ __copyright__ = "Copyright (c) 2023 Claudia"
 __license__ = "Python"
 
 
-import webbrowser
-import argparse
-import dotenv
-import base64
-import json
-import zlib
-import sys
 import os
 import re
+import sys
+import json
+import zlib
+import dotenv
+import base64
+import argparse
+import webbrowser
 
 
 # This is necessary because I want to import functions in a file called utils.py and that file is one level up
@@ -52,21 +52,6 @@ def generate_topology(links):
         )
 
     return {"name": "gdl_campus_topology", "nodes": nodes, "links": processed_links}
-
-
-# def yaml_to_mermaid(yaml_data):
-#     mermaid_text = "graph TD;\n"
-#
-#     for node, data in yaml_data["nodes"].items():
-#         mermaid_text += f"    {node};\n"
-#
-#     for link in yaml_data["links"]:
-#         endpoints = link["endpoints"]
-#         e1 = endpoints[0].split(":")
-#         e2 = endpoints[1].split(":")
-#         mermaid_text += f"    {e1[0]} -->|{e1[1]} - {e2[1]}| {e2[0]};\n"
-#
-#     return mermaid_text
 
 
 def yaml_to_mermaid(yaml_data, dir="TD"):
@@ -157,9 +142,6 @@ def main():
 
     # Initialize payload dictionary of payload to send to template
     pld = dict()
-
-    # Load Environment variables from .env containing Suzieq REST API Token
-    dotenv.load_dotenv()
 
     # One option could be to have the user pick from a valid list of namespaces
     namespaces = utils.get_namespace_list()
