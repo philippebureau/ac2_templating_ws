@@ -93,7 +93,20 @@ def main():
     with col1:
 
         # Get Namespaces
-        namespace_list = utils.get_namespace_list()
+        namespace_list, full_response = utils.get_namespace_list()
+        if full_response.ok:
+            pass
+        else:
+            st.error(
+                f"Aborting Run! Cannot access SuzieQ API! Status Code: "
+                f"{full_response.status_code} Reason: {full_response.reason} "
+            )
+            st.info(
+                f"Please make sure you have a .env file at the top level of your repository and a valdi token in "
+                f"the environment variable SQ_API_TOKEN."
+            )
+            st.info("There is an .env_sample file which can be renamed to .env and updated with the valid token.")
+            st.stop()
 
         try:
 
@@ -110,7 +123,7 @@ def main():
 
         if selected_ns:
             # Sample list of switches (you can modify this list)
-            available_switches = utils.get_device_list(selected_ns)
+            available_switches, full_response = utils.get_device_list(selected_ns)
 
             # Create multi-select for switches
             selected_switches = st.multiselect(
