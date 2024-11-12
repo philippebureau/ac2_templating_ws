@@ -433,10 +433,6 @@ def get_username():
         return os.path.expanduser('~').split(os.sep)[-1]
 
 
-# Test the function
-print(f"Current username: {get_username()}")
-
-
 def replace_special_chars(text):
     # Replace spaces and special characters with underscores
     return re.sub(r"[^a-zA-Z0-9]", "_", text)
