@@ -69,7 +69,6 @@ def main():
     # Format as human-readable string
     human_readable = datetime.datetime.now().strftime("%B %d, %Y at %I:%M %p")
 
-
     selected_switches = list()
     namespace_list = list()
     selected_ns = list()
@@ -208,7 +207,6 @@ def main():
             # TODO: Check to see if the vlan name is per guideline (has the subnet)
 
             rpt_dict.update({"header_summary": header_summary})
-
 
             template = "stp_verification_template.j2"
 
