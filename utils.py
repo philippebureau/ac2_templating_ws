@@ -423,6 +423,11 @@ def get_secret(URL, ROOT_TOKEN, PATH="dev_snow/config"):
 
 
 def get_username():
+    """
+    Cross os function to get username from Mac OSX, Windows, and Linux.
+    If can't get from ENV VAR looks at home directory.
+    :return:  system username
+    """
     system = platform.system().lower()
 
     if system == 'darwin' or system == 'linux':
