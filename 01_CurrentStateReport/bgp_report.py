@@ -70,6 +70,7 @@ def create_bgp_diagram(bgp_sessions, filename="bgp_sessions", outformat="png"):
 
 def get_template_selection(options):
     """
+    Example Only - Currently Not Used
     Function to enumerate templates in the templates directory for interactive user selection
     :param options:
     :return: selected template

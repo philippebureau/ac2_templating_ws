@@ -98,8 +98,9 @@ def main():
 
     # Step 3  Render the template
     # Render the template with the BGP data
-    # Tip: Look at the template and see what template variables its expecting you to send
-    # Hint:
+    # Tip: Look at the template and see what template variables its expecting you to send and see if you can
+    # determine the type by looking at the logic
+
     rendered_config = bgp_rpt_template.render(
 
 
