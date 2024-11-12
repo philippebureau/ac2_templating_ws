@@ -537,7 +537,7 @@ def get_namespace_list():
         print(f"Reason: {ns_response.reason}")
         print(ns_response.json())
 
-    return namespace_list
+    return namespace_list, ns_response
 
 
 def get_device_list(nsx):
@@ -560,8 +560,9 @@ def get_device_list(nsx):
         print(f"Status Code: {response.status_code}")
         print(f"Reason: {response.reason}")
         print(response.json())
+        exit("Aborting Run! Check credentials.")
 
-    return device_list
+    return device_list, response
 
 
 def get_topology(namespace, via="lldp"):
@@ -586,6 +587,7 @@ def get_topology(namespace, via="lldp"):
         print(f"Status Code: {response.status_code}")
         print(f"Reason: {response.reason}")
         print(response.json())
+        exit("Aborting Run! Check credentials.")
 
     return response
 
