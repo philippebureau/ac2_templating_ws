@@ -23,6 +23,7 @@ import jinja2
 import dotenv
 import argparse
 import datetime
+import platform
 import requests
 import ipaddress
 import itertools
@@ -394,6 +395,14 @@ def create_std_cr_snow(snow_dict):
 
 # Hashicorp Local Vault
 def get_secret(URL, ROOT_TOKEN, PATH="dev_snow/config"):
+    """
+    Note: not used in repo currently
+    Function to extract secrets from a local dev Vault instance
+    :param URL:  Vault URL
+    :param ROOT_TOKEN:  Vault Root Toke
+    :param PATH: Secret path
+    :return: username, password, instance
+    """
 
     # Create a client instance
     client = hvac.Client(url=URL, token=ROOT_TOKEN)
@@ -411,6 +420,21 @@ def get_secret(URL, ROOT_TOKEN, PATH="dev_snow/config"):
         return username, password, instance
     else:
         raise Exception("Vault authentication failed")
+
+
+def get_username():
+    system = platform.system().lower()
+
+    if system == 'darwin' or system == 'linux':
+        return os.environ.get('USER')
+    elif system == 'windows':
+        return os.environ.get('USERNAME')
+    else:
+        return os.path.expanduser('~').split(os.sep)[-1]
+
+
+# Test the function
+print(f"Current username: {get_username()}")
 
 
 def replace_special_chars(text):
