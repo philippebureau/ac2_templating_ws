@@ -38,7 +38,6 @@ def create_std_cr_snow(
     payload,
     template_id="b9c8d15147810200e90d87e8dee490f6",
 ):
-
     """
 
     Given the FQDN of a live Service Now Personal Developer Instance and the accompanying credentials,
@@ -51,7 +50,6 @@ def create_std_cr_snow(
     :param template_id: SNOW CR template ID
     :return:
     """
-
 
     # ServiceNow instance details
 
@@ -140,11 +138,19 @@ def main():
 
         print(f"Saved resulting CR file in current directory to {filename}")
 
+        # Craft CR short description
+
+        short_desccription = (
+            f"AC2 {utils.get_username()} "
+            f"Vlan Work Set new Vlan {details_dict['new_vlan']} "
+            f"for subnet {details_dict['subnet_cidr']} on {details_dict['gateway_device']} "
+        )
+
         if arguments.create_cr and arguments.password:
             # Need to create CR in SNOW
             #     keys = ["instance", "username", "password", "template", "short_desc", "desc", "test_plan", ]
             cr_payload = {
-                "short_description": f"AC2 CdL Vlan Work Set new Vlan {details_dict['new_vlan']} for subnet {details_dict['subnet_cidr']} on {details_dict['gateway_device']} ",
+                "short_description": short_desccription,
                 "description": rendered_string,
                 "test_plan": "ping",
                 "justification": "Building automation project",
@@ -160,7 +166,9 @@ def main():
             username = utils.get_os_env("pdi_uname")
             password = utils.get_os_env("pdi_pwd")
 
-            resp = create_std_cr_snow(arguments.snow_pdi, username, password, cr_payload)
+            resp = create_std_cr_snow(
+                arguments.snow_pdi, username, password, cr_payload
+            )
 
             if resp:
 
