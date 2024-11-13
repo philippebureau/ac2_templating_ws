@@ -1,5 +1,46 @@
 # Current State Report Mini Project
 
+## Getting Started
+
+This project will start to familiarize you with the overall repository environment as well as some lessons learned.
+
+Please open the `bgp_report_starter.py` script in your favorite editor and lets get to work!
+
+```python
+% python bgp_report_starter.py
+Starter script needs to be updated!!
+```
+
+
+
+```python
+% python bgp_report_starter.py -h
+usage: bgp_report_starter.py [-h] [-t TITLE] [-l LOCATION]
+
+Script Description
+
+options:
+  -h, --help            show this help message and exit
+  -t TITLE, --title TITLE
+                        Add Custom Title to report. Default: bgp_report_starter
+  -l LOCATION, --location LOCATION
+                        Location Default: GDL Campus
+
+Usage: ' python bgp_report_starter.py' or python bgp_report_starter.py -l 'AMS Campus'
+```
+
+
+
+Tiips:
+
+The script uses the [diagrams](https://pypi.org/project/diagrams/) module which requires the Graphviz application to be installed on your system.
+
+[Diagrams Getting Started > Installation](https://diagrams.mingrammer.com/docs/getting-started/installation)
+
+
+
+## Overview
+
 This Python script uses the Diagrams module and JSON output from SuzieQ 
 to generate a state report on the BGP Sessions for a particular location.
 

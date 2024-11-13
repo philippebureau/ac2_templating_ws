@@ -1,6 +1,6 @@
 #!/usr/bin/python -tt
 # Project: ac2_templating_workshop
-# Filename: bgp_report
+# Filename: bgp_report_starter
 # claudiadeluna
 # PyCharm
 
@@ -73,7 +73,7 @@ def main():
     env = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"))
 
     # Set template file (this file should be in the templates directory under 01_CurrentStateReport
-    selected_template = "bgp_report_md.j2"
+    selected_template = "bgp_report_starter_md.j2"
 
     # Step 2: Load the template int memory (Tip:  Slide 19) using the variable bgp_rpt_template
 
@@ -88,57 +88,72 @@ def main():
     # Tip: Take a look at the JSON file with the data and determine how you are going to process it to get the
     # values above
 
+    data = ""
 
 
     # Define a filename
     drawing_filename = f"{utils.replace_special_chars(arguments.location)}_BGP_Diagram"
     outformat = "jpg"
-    create_bgp_diagram(data, filename=drawing_filename, outformat=outformat)
-    print(f"\nDiagram saved as {drawing_filename}.{outformat}")
+    # If data is empty (the script has not been updated) don't generate an empty diagram
+    if data:
+        create_bgp_diagram(data, filename=drawing_filename, outformat=outformat)
+        print(f"\nDiagram saved as {drawing_filename}.{outformat}")
 
     # Step 3  Render the template
     # Render the template with the BGP data
     # Tip: Look at the template and see what template variables its expecting you to send and see if you can
     # determine the type by looking at the logic
 
-    rendered_config = bgp_rpt_template.render(
+    # Putting in try/except block so script can be run before it is complete
+    try:
+        rendered_config = bgp_rpt_template.render(
 
 
 
 
 
-        drawing_filename=f"{drawing_filename}.{outformat}",
-    )
+            drawing_filename=f"{drawing_filename}.{outformat}",
+        )
 
-    print("=============== RENDERED RESULT ===============")
-    print(rendered_config)
-    print("===============================================\n")
+        print("=============== RENDERED RESULT ===============")
+        print(rendered_config)
+        print("===============================================\n")
 
-    # FINAL STEP: Save the file using a filename like XXXLocation_BGP_REPORT.md
-    utils.save_file(
-        f"{ }_BGP_REPORT.md",
-        rendered_config,
-    )
+    except:
+        rendered_config = ""
+        print("Starter script needs to be updated!!")
+
+    # FINAL STEP: Save the file using a filename like XXX_Location_bgp_report_starter.md
+    # Tip: the utils module has a function to help removes spaces and special characters and one of the CLI
+    # options is for the location
+    filename = "location text with spaces removed"
+
+    # if rendered_config is empty don't save an empty report
+    if rendered_config:
+        utils.save_file(
+            f"{filename}_bgp_report_starter.md",
+            rendered_config,
+        )
 
 
 # Standard call to the main() function.
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Script Description",
-        epilog="Usage: ' python bgp_report.py' or python bgp_report.py -l 'AMS Campus'",
+        epilog="Usage: ' python bgp_report_starter.py' or python bgp_report_starter.py -l 'AMS Campus'",
     )
 
     parser.add_argument(
         "-t",
         "--title",
-        help="Add Custom Title to report",
+        help="Add Custom Title to report. Default: bgp_report_starter",
         action="store",
         default="BGP Report",
     )
     parser.add_argument(
         "-l",
         "--location",
-        help="Update location",
+        help="Location Default: GDL Campus",
         action="store",
         default="GDL Campus",
     )

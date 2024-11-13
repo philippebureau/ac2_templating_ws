@@ -26,7 +26,11 @@ parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
 # Now you can import the module from the parent directory
-import utils
+try:
+    import utils
+except:
+    print(f"Move this script up a level to execute.")
+    exit("Aborting run!")
 
 
 def create_bgp_diagram(bgp_sessions, filename="bgp_sessions", outformat="png"):
@@ -95,7 +99,7 @@ def get_template_selection(options):
 def main():
 
     # Step 1: Create Environment
-    env = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"))
+    env = jinja2.Environment(loader=jinja2.FileSystemLoader("../templates"))
 
     selected_template = "bgp_report_md.j2"
 
@@ -129,7 +133,7 @@ def main():
     # and saved the output to a JSON file for later use
 
     # Load the JSON file
-    data = utils.load_json("GDL_bgp.json")
+    data = utils.load_json("../GDL_bgp.json")
 
     # Boolean to see if all sessions are up
     all_peers_up = True
@@ -164,8 +168,9 @@ def main():
     print(rendered_config)
     print("===============================================\n")
 
+    filename = utils.replace_special_chars(arguments.locationz)
     utils.save_file(
-        f"{utils.replace_special_chars(arguments.location)}_BGP_REPORT.md",
+        f"{filename}_BGP_REPORT.md",
         rendered_config,
     )
 
@@ -180,14 +185,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "-t",
         "--title",
-        help="Add Custom Title to report",
+        help="Add Custom Title to report. Default: BGP_Report",
         action="store",
         default="BGP Report",
     )
     parser.add_argument(
         "-l",
         "--location",
-        help="Update location",
+        help="Location Default: GDL Campus",
         action="store",
         default="GDL Campus",
     )
