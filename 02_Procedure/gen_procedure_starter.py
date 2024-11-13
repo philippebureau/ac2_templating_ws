@@ -1,6 +1,6 @@
 #!/usr/bin/python -tt
 # Project: ac2_templating_workshop
-# Filename: gen_procedure
+# Filename: gen_procedure_starter
 # claudiadeluna
 # PyCharm
 
@@ -27,79 +27,109 @@ parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Append the parent directory to sys.path so python searches that directory for the utils file
 sys.path.append(parent_dir)
 # Import the utils module (python script) one level up
-import utils
+try:
+    import utils
+except:
+    print(f"Move this script up a level to execute.")
+    exit("Aborting run!")
 
 
 def main():
 
-    # Date stamp for Report if one already exists
-    file_timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    # File Friendly timestamp
+    # Tip: Take a peek in utils
+    file_timestamp = ""
 
     # Format as human-readable string
-    human_readable = datetime.datetime.now().strftime("%B %d, %Y at %I:%M %p")
+    # Tip: Take a peek in utils
+    human_readable = ""
 
     # ----------------------------------------------------------------------------------------------------------
     # Load the installation details YAML file
-    payload_dict = utils.load_yaml(arguments.payload_file)
+    # Tip: .. yes, you guessed it! utils
+    # This is an example of the type of dictionary you should have once you load the YAML file
+    payload_dict = {
+        "model": "",
+        "mgmt_subnet": "",
+    }
     print("YAML File Contents")
     pprint.pprint(payload_dict)
     # ----------------------------------------------------------------------------------------------------------
 
     # ----------------------------------------------------------------------------------------------------------
     # Select Image
-    # This sets the image we will use in the document
-    if re.search(r"600", payload_dict["model"]):
-        img = os.path.join(".", "images", "ORDR_S600_Sensor.jpg")
-    elif re.search(r"2000", payload_dict["model"]):
-        img = os.path.join(".", "images", "ORDR_S2000_Sensor.jpg")
-    else:
-        img = os.path.join(".", "images", "istockphoto-519363862-612x612.jpeg")
+    # Consider the logic needed to set the correct image file baed on the YAML file
+    # Make sure that you provide an option if the right image can't be set!
+    # The img variable should a relative file path string to the needed image file
 
-    # Here we are adding the appropriate diagram image to the payload dictionary
-    payload_dict.update({"diagram": img})
+    # For now the img is a Not found graphic
+    img = os.path.join(".", "images", "istockphoto-519363862-612x612.jpeg")
+
+
+
+
+
+    # Now we need to add our calculated image file to our payload dictionary using the key "diagram"
+    # Add the appropriate diagram image to the payload dictionary
+
 
     # Update the payload dictionary we will send to the template with the human readable timestamp
-    payload_dict.update({"dattim": human_readable})
+    # using the key "dattim:
 
-    # TODO: Calculate configuration parameters from subnet
+
+    # Calculate configuration parameters from subnet
 
     # Get Gateway
-    payload_dict.update({"mgmt_gw": utils.get_first_ip(payload_dict["mgmt_subnet"])})
+    # Calculate the Management Gateway of the appliance and add it to the payload dictionary
+    # key: mgmt_gw
+    # Tip...you guessed it
+
 
     # Get Mask in dotted notation
-    mgmt_mask = utils.get_mask_from_cidr(payload_dict["mgmt_subnet"])
-    payload_dict.update({"mgmt_mask": mgmt_mask})
+    # Calculate the management subnet mask in dotted notation and add it to the payload dictionary
+    # key: mgmt_mask
+
+
 
     # Get Appliance IP (4th Valid in subnet)
-    payload_dict.update({"mgmt_ip": utils.get_fourth_ip(payload_dict["mgmt_subnet"])})
+    # Calculate the management IP of the appliance and add it to the payload dictionary
+    # Tip:  By convention it is the 4th valid ip of the management subnet  ..and yes... the other thing
+    # key: mgmt_ip
+
 
     # ----------------------------------------------------------------------------------------------------------
-    # CREATE JINJA2 TEMPLATE ENVIRONMENT
+    # STEP 1: CREATE JINJA2 TEMPLATE ENVIRONMENT
     # Note: in the jenv_filesystem function the default line comment is #
     #       Because # is part of the Markdown syntax we need to use something else if we
     #       are rendering Markdown otherwise our # Titles will be interpreted by Jinja as comments!
-    env_obj = utils.jenv_filesystem(line_comment="=")
-    # print(env_obj.list_templates())
-    # ADD DEBUGGING Just In Case
-    env_obj.add_extension("jinja2.ext.debug")
 
-    # LOAD TEMPLATE
-    template_obj = utils.load_jtemplate(
-        env_obj, template_file_name="installation_procedure_md_template.j2"
-    )
-    rendered = template_obj.render(cfg=payload_dict)
+
+    # How would you print out all the templates available in the environment?
+
+    # ADD DEBUGGING Just In Case if needed
+    # env_obj.add_extension("jinja2.ext.debug")
+
+    # STEP 2: LOAD TEMPLATE
+
+
+    # STEP 3: RENDER TEMPLATE
+    # Look at the template and make sure you understand the script variable which maps to the template variable
+
 
     # Define Parent directory (in this example we are saving into the local directory)
     other_fp = os.path.join(os.getcwd())
     # Define the filename
-    filename = (
-        f"{payload_dict['location']}_ORDR_Appliance_Installation_{file_timestamp}.md"
-    )
+    # Should be something like XXX_Location_ORDR_Appliance_Installation_<file timestamp>
+    filename = ""
+
+
     # Create the full path to the new file
-    procedure_fp = os.path.join(other_fp, filename)
+    # Tip: keep using the os module
+    procedure_fp = ""
 
     # Save the rendered content to the file
-    utils.save_file(procedure_fp, rendered)
+    # There is a utils function called save_file which takes a filepath and rendered content
+
     print(f"\n\nSaved installation Markdown file to {procedure_fp}\n")
 
 
@@ -107,13 +137,13 @@ def main():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Script Description",
-        epilog="Usage: ' python gen_procedure.py' The default payload is 'Installation_details_S2000.yml'.  "
+        epilog="Usage: ' python gen_procedure_starter_starter.py' The default payload is 'Installation_details_S2000.yml'.  "
                "To use another payload file use the -p option.",
     )
     parser.add_argument(
         "-p",
         "--payload_file",
-        help="YAML Payload file to use",
+        help="YAML Payload file to use. Default: Installation_details_S2000.yml",
         action="store",
         default="Installation_details_S2000.yml",
     )

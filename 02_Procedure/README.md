@@ -1,5 +1,31 @@
 # Procedure/Work Instructions Mini Project
 
+## Getting Started
+
+This mini project introduces some common strategies in templating.
+
+- YAML Payload file 
+  - Yes, you saw a local JSON payload in the Current State Report but this was extracted from a system.  Here we show a YAML file of "installation details".  We use YAML because it allows for comments.
+  - In subsequent projects we will be extracting our "details" via API but sometimes that is not possible and a local YAML or JSON is a handy way to store these details and keep them under revision control!
+- Installation artefacts
+  - In addition to the YAML file we have installation pictures based on the appliance models being deployed.  The YAML file indiciates which picture is to be used in the template.
+  - Take a look at the YAML files so you can understand the structure and content
+
+Please open the `gen_procedure_starter.py` script in your favorite editor and lets get to work!
+
+```python
+% python gen_procedure_starter.py 
+YAML File Contents
+{'mgmt_subnet': '', 'model': ''}
+
+
+Saved installation Markdown file to 
+```
+
+
+
+## Overview
+
 This mini project illustrates how to use a template to develop specific installation procedures for a particular location.
 
 ### Usage
@@ -149,5 +175,4 @@ which will output your data structure once rendered.
   - jinja2
 
   - PyYAML
-
 
