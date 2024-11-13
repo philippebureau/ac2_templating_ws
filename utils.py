@@ -703,6 +703,14 @@ def check_stp_switch(vlanx, switch):
     return vlan_has_stp_root, sq_api_response
 
 
+def file_timestamp():
+    return datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+
+
+def human_readable_timestamp():
+    return datetime.datetime.now().strftime("%B %d, %Y at %I:%M %p")
+
+
 def main():
     pass
 
