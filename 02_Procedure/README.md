@@ -6,7 +6,8 @@ This mini project introduces some common strategies in templating.
 
 - YAML Payload file 
   - Yes, you saw a local JSON payload in the Current State Report but this was extracted from a system.  Here we show a YAML file of "installation details".  We use YAML because it allows for comments.
-  - In subsequent projects we will be extracting our "details" via API but sometimes that is not possible and a local YAML or JSON is a handy way to store these details and keep them under revision control!
+  - In subsequent projects in this repository we will be extracting our "details" via API but sometimes that is not possible and a local YAML or JSON is a handy way to store these details and keep them under revision control!
+  - We will use SuzieQs External Database (EXTDB) functionality to store these type of design details.  This is "off label" use of SuzieQ.  Products like OpsMill's InfraHub are targeting this gap in automation tools.
 - Installation artefacts
   - In addition to the YAML file we have installation pictures based on the appliance models being deployed.  The YAML file indiciates which picture is to be used in the template.
   - Take a look at the YAML files so you can understand the structure and content
