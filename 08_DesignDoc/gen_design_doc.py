@@ -28,6 +28,15 @@ import utils
 
 def prompt():
 
+    """
+    This is just a summary of the activities that need to be done to complete this mini project.
+
+    This should be removed from main() once the project is complete.
+
+    :return:
+    """
+
+
     prompt = """
     
     Extract the design available to you from the Devices, Subnets/Vlans, and Connectivity Matrix tables
@@ -53,6 +62,8 @@ def prompt():
     
     Save the rendered file as Markdown.
     
+    Craft text suitable for a Change Control ticket and save in a change_request_text.txt file.
+    
     """
 
     return prompt
@@ -68,9 +79,7 @@ def main():
     :return:
     """
 
-
     print(prompt())
-
 
 
 # Standard call to the main() function.
