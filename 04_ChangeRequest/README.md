@@ -87,6 +87,25 @@ Installation [Guidance](https://www.perplexity.ai/page/creating-a-servicenow-dev
 - requests
 - httpx
 - python-dotenv (to store the Vault address and token)
-- hvac ([HashiCorp Vault](https://hvac.readthedocs.io/en/stable/overview.html#)) (to store the SNOW credentials)
+- hvac ([HashiCorp Vault](https://hvac.readthedocs.io/en/stable/overview.html#)) (to store the SNOW credentials) (currently not in use)
 
+
+
+---
+
+### Alternatives
+
+The CR creation is disabled by default.
+
+Payload data is in a local CSV file.
+
+```bash
+├── 04_ChangeRequest
+│   ├── README.md
+│   ├── gen_new_vlan_cr.py
+│   ├── payload.csv
+│   └── templates
+│       └── new_vlan_cr_template.j2
+
+```
 

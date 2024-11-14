@@ -177,3 +177,29 @@ which will output your data structure once rendered.
 
   - PyYAML
 
+---
+
+### Alternatives
+
+All files are local for this mini project.
+
+
+
+```bash
+├── 02_Procedure
+│   ├── Installation_details_S2000.yml
+│   ├── Installation_details_S600.yml
+│   ├── Installation_details_template.yml
+│   ├── README.md
+│   ├── gen_procedure_starter.py
+│   ├── images
+│   │   ├── ORDR_S2000_Sensor.jpg
+│   │   ├── ORDR_S600_Sensor.jpg
+│   │   └── istockphoto-519363862-612x612.jpeg
+│   ├── templates
+│   │   └── installation_procedure_md_template.j2
+│   └── working_example
+│       ├── GDL Office_ORDR_Appliance_Installation_20241113-110428.md
+│       └── gen_procedure.py
+```
+

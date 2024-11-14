@@ -201,4 +201,37 @@ These templates are for example only. They have not been tested andy may not wor
 
 - jinja2
 
-  
+
+---
+
+### Alternatives
+
+All files are local for this mini project.
+
+```bash
+── 03_Configurations
+│   ├── README.md
+│   ├── cisco
+│   │   └── ios-xe
+│   │       ├── intf_uplink.j2
+│   │       ├── intf_user.j2
+│   │       ├── l2_base.j2
+│   │       └── l3_base.j2
+│   ├── modular
+│   │   ├── modular_sw_cfg_extends.py
+│   │   ├── modular_sw_cfg_include.py
+│   │   └── templates
+│   │       ├── base_switch_config_block_extends.j2
+│   │       ├── base_switch_config_include.j2
+│   │       ├── main_switch_config_include.j2
+│   │       ├── tacacs_server_config_extends.j2
+│   │       ├── tacacs_server_config_include.j2
+│   │       ├── user_interface_config_extends.j2
+│   │       └── user_interface_config_include.j2
+│   └── monolithic
+│       ├── monolithic_sw_cfg.py
+│       ├── new_switches.csv
+│       └── templates
+│           └── dnac_baseconfig_sample_template.j2
+```
+

@@ -142,3 +142,11 @@ Note:  DuckDuckGo browser does not render.
 - jinja2
 - python-dotenv (load the SuzieQ REST API Token)
 - requests (make calls to SuzieQ REST API and to Mermaid Live Editor)
+
+
+
+---
+
+### Alternatives
+
+Need local LLDP topology
