@@ -169,7 +169,7 @@ def main():
     topology_data = generate_topology(response.json())
 
     # Render the Jinja2 template
-    clab_topology = utils.render_in_one("lldp_topology_template.j2", topology_data)
+    clab_topology = utils.render_in_one("lldp_topology_template.j2", topology_data, search_dir=".")
 
     # Optionally, save the YAML topology to a file
     filename = f"{topology_data['name']}.clab.yml"
