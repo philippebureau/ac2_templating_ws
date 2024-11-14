@@ -23,6 +23,7 @@ cisco
 *.xlsx
 .env
 utils_snow_vault.py
+clab_topology_template.j2
 free*
 vyos*
 *.webp
