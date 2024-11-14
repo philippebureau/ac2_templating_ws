@@ -18,7 +18,7 @@ import os
 import csv
 import yaml
 import json
-import hvac
+# import hvac # Used for Vault but not in final repo
 import jinja2
 import dotenv
 import argparse
