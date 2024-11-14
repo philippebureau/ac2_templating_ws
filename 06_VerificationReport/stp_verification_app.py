@@ -221,7 +221,9 @@ def main():
 
             rpt_dict.update({"header_summary": header_summary})
 
-            template = "stp_verification_template.j2"
+            # Template stp_verification_template.j2
+            # template = "stp_verification_template.j2"
+            template = "other_template_var.j2"
 
             # Define the filename
             filename = (
