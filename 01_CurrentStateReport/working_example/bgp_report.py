@@ -16,8 +16,6 @@ import argparse
 import jinja2
 import sys
 import os
-from diagrams import Diagram, Edge
-from diagrams.generic.network import Router
 
 # Get the parent directory
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -33,73 +31,10 @@ except:
     exit("Aborting run!")
 
 
-def create_bgp_diagram(bgp_sessions, filename="bgp_sessions", outformat="png"):
-    """
-    Given a list of dictionaries in bgp_sessions with local and peer information, draw a diagram which
-    shows each peering session including state and ASN
-    :param bgp_sessions:
-    :param filename:
-    :return: Nothing but the file is saved as "filename".
-    """
-    with Diagram(
-        "BGP Sessions",
-        show=False,
-        filename=filename,
-        direction="LR",
-        outformat=outformat,
-    ):
-        # Initialize an empty dictionary which will have a key and Diagram object based on each element
-        # (peering session dictionary) of the list
-        routers = {}
-
-        for session in bgp_sessions:
-            # Create each local nodes
-            local_key = f"{session['hostname']}_{session['asn']}"
-            if local_key not in routers:
-                routers[local_key] = Router(
-                    f"{session['hostname']}\nAS {session['asn']}"
-                )
-
-            # Create peer nodes
-            peer_key = f"{session['peerHostname']}_{session['peerAsn']}"
-            if peer_key not in routers:
-                routers[peer_key] = Router(
-                    f"{session['peerHostname']}\nAS {session['peerAsn']}"
-                )
-
-            # Create edge with session details
-            edge_label = f"State: {session['state']}\nVRF: {session['vrf']}"
-            routers[local_key] - Edge(label=edge_label) - routers[peer_key]
-
-
-def get_template_selection(options):
-    """
-    Example Only - Currently Not Used
-    Function to enumerate templates in the templates directory for interactive user selection
-    :param options:
-    :return: selected template
-    """
-    # Display numbered options
-    for index, item in enumerate(options, start=1):
-        print(f"{index}. {item}")
-
-    # Get user input and validate
-    while True:
-        try:
-            choice = int(input("Enter the number of your choice: "))
-            if 1 <= choice <= len(options):
-                return options[choice - 1]
-            else:
-                print("Invalid choice. Please try again.")
-        except ValueError:
-            print("Please enter a valid number.")
-
-
-
 def main():
 
     # Step 1: Create Environment
-    env = jinja2.Environment(loader=jinja2.FileSystemLoader("../templates"))
+    env = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"))
 
     selected_template = "bgp_report_md.j2"
 
@@ -112,7 +47,7 @@ def main():
     # for template in template_list:
     #     print(template)
 
-    # selected_template = get_template_selection(template_list)
+    # selected_template = utils.get_template_selection(template_list)
     # print(f"You selected: {selected_template}")
     # ====  END Example of an interactive CLI to pick the template
 
@@ -133,7 +68,7 @@ def main():
     # and saved the output to a JSON file for later use
 
     # Load the JSON file
-    data = utils.load_json("../GDL_bgp.json")
+    data = utils.load_json("GDL_bgp.json")
 
     # Boolean to see if all sessions are up
     all_peers_up = True
@@ -149,7 +84,7 @@ def main():
 
     drawing_filename = f"{utils.replace_special_chars(arguments.location)}_BGP_Diagram"
     outformat = "jpg"
-    create_bgp_diagram(data, filename=drawing_filename, outformat=outformat)
+    utils.create_bgp_diagram(data, filename=drawing_filename, outformat=outformat)
     print(f"\nDiagram saved as {drawing_filename}.{outformat}")
 
     # Step 3  Render the template

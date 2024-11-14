@@ -16,8 +16,7 @@ import argparse
 import jinja2
 import sys
 import os
-from diagrams import Diagram, Edge
-from diagrams.generic.network import Router
+
 
 # Get the parent directory
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,44 +26,6 @@ sys.path.append(parent_dir)
 
 # Now you can import the module from the parent directory
 import utils
-
-def create_bgp_diagram(bgp_sessions, filename="bgp_sessions", outformat="png"):
-    """
-    Given a list of dictionaries in bgp_sessions with local and peer information, draw a diagram which
-    shows each peering session including state and ASN
-    :param bgp_sessions:
-    :param filename:
-    :return: Nothing but the file is saved as "filename".
-    """
-    with Diagram(
-        "BGP Sessions",
-        show=False,
-        filename=filename,
-        direction="LR",
-        outformat=outformat,
-    ):
-        # Initialize an empty dictionary which will have a key and Diagram object based on each element
-        # (peering session dictionary) of the list
-        routers = {}
-
-        for session in bgp_sessions:
-            # Create each local nodes
-            local_key = f"{session['hostname']}_{session['asn']}"
-            if local_key not in routers:
-                routers[local_key] = Router(
-                    f"{session['hostname']}\nAS {session['asn']}"
-                )
-
-            # Create peer nodes
-            peer_key = f"{session['peerHostname']}_{session['peerAsn']}"
-            if peer_key not in routers:
-                routers[peer_key] = Router(
-                    f"{session['peerHostname']}\nAS {session['peerAsn']}"
-                )
-
-            # Create edge with session details
-            edge_label = f"State: {session['state']}\nVRF: {session['vrf']}"
-            routers[local_key] - Edge(label=edge_label) - routers[peer_key]
 
 
 def main():
@@ -90,13 +51,12 @@ def main():
 
     data = ""
 
-
     # Define a filename
     drawing_filename = f"{utils.replace_special_chars(arguments.location)}_BGP_Diagram"
     outformat = "jpg"
     # If data is empty (the script has not been updated) don't generate an empty diagram
     if data:
-        create_bgp_diagram(data, filename=drawing_filename, outformat=outformat)
+        utils.create_bgp_diagram(data, filename=drawing_filename, outformat=outformat)
         print(f"\nDiagram saved as {drawing_filename}.{outformat}")
 
     # Step 3  Render the template
@@ -107,11 +67,6 @@ def main():
     # Putting in try/except block so script can be run before it is complete
     try:
         rendered_config = bgp_rpt_template.render(
-
-
-
-
-
             drawing_filename=f"{drawing_filename}.{outformat}",
         )
 
