@@ -143,3 +143,27 @@ https://forum.graphviz.org/t/new-simplified-installation-procedure-on-windows/22
 This mini project also starts to use the utils script at the top level of the repository as a module which is imported.
 
 - utils (local module)
+
+---
+
+### Alternatives
+
+This project works on a local JSON file.
+For issues with `diagrams` and GraphViz, the JPG file under the working_example directory can be moved up a level and used.
+Note: Comment out the graph generation code.
+
+One option would be to extract BGP information from Suzieq via a REST call.
+
+```bash
+├── 01_CurrentStateReport
+│   ├── GDL_bgp.json
+│   ├── README.md
+│   ├── bgp_report_starter.py
+│   ├── templates
+│   │   └── bgp_report_md.j2
+│   └── working_example
+│       ├── GDL_Campus_BGP_Diagram.jpg
+│       ├── GDL_Campus_BGP_REPORT.md
+│       └── bgp_report.py
+```
+

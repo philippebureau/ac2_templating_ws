@@ -168,7 +168,7 @@ def main():
     print(rendered_config)
     print("===============================================\n")
 
-    filename = utils.replace_special_chars(arguments.locationz)
+    filename = utils.replace_special_chars(arguments.location)
     utils.save_file(
         f"{filename}_BGP_REPORT.md",
         rendered_config,
