@@ -281,7 +281,8 @@ def load_jtemplate(jenv_obj, template_file_name):
         print(f"ERROR: Template {template_file_name} not found!")
         print(f"Available Templates in the Environment are:")
         for line in jenv_obj.list_templates():
-            print(f"\t- {line}")
+            if ".j2" in line:
+                print(f"\t- {line}")
     except Exception as e:
         print(f"ERROR: {e}")
 
