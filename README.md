@@ -68,12 +68,13 @@ pip install -r requirements.txt
 
 ```
 
+pip install pytz
+
+pip install black
 
 pip install jinja2
 
 pip install solara
-
-pip install black
 
 pip install pyyaml
 
@@ -81,12 +82,26 @@ pip install pandas
 
 pip install diagrams
 
-pip install httpx
+pip install openpyxl
+
+pip install streamlit
 
 pip install python-dotenv
 
-pip install streamlit
+
+
+Note:  diagrams requires the installation of the Graphviz application
+
+[Diagrams Getting Started > Installation](https://diagrams.mingrammer.com/docs/getting-started/installation)
+
+Native installation for Windows Users without a package manager
+https://forum.graphviz.org/t/new-simplified-installation-procedure-on-windows/224
+
+
 
 #### Uninstall all
 
 ``` pip uninstall -r requirements.txt -y ```
+
+
+
