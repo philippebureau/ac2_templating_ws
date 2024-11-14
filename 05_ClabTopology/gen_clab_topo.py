@@ -148,7 +148,10 @@ def main():
 
     response = utils.get_topology(arguments.namespace)
     if response.ok:
-        pass
+        # Saving the response so we hae a local copy of the data, just in case
+        if response.json():
+            utils.save_json_payload(response.json(), "topology_response_from_suzieq.json")
+
     else:
         print(response)
         exit(
@@ -161,16 +164,6 @@ def main():
     pld.update({"name": f"{arguments.namespace}_clab_topology"})
     pld.update({"kind": "ceos"})
     pld.update({"image": "ceos:latest"})
-
-    if response.json():
-        # Specify the file path where you want to save the JSON
-        file_path = "topology_data.json"
-
-        # Open the file in write mode and save the JSON payload
-        with open(file_path, "w") as json_file:
-            json.dump(response.json(), json_file, indent=4)
-
-        print(f"JSON payload has been saved to {file_path}")
 
     # Generate the topology data
     topology_data = generate_topology(response.json())
@@ -187,6 +180,7 @@ def main():
         f"\nContainerlab Topology file saved to {filename} in current working directory.\n"
     )
 
+    # Optional action to generate a Mermail Graph of the topology
     if arguments.graph:
 
         # Generate Mermaid text from the updated YAML
