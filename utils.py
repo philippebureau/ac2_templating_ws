@@ -31,6 +31,8 @@ import itertools
 
 import pandas as pd
 
+from diagrams import Diagram, Edge
+from diagrams.generic.network import Router
 
 # Disable  Unverified HTTPS request is being made to host messages
 requests.packages.urllib3.disable_warnings(
@@ -796,6 +798,75 @@ def high_level_design_diagram():
     # Save the image in the 'images' directory
     plt.savefig('high_level_design.jpg', format='jpg', bbox_inches='tight')
     plt.close()
+
+
+
+def create_bgp_diagram(bgp_sessions, filename="bgp_sessions", outformat="png"):
+    """
+    Given a list of dictionaries in bgp_sessions with local and peer information, draw a diagram which
+    shows each peering session including state and ASN
+    :param bgp_sessions:
+    :param filename:
+    :return: Nothing but the file is saved as "filename".
+    """
+
+    try:
+        with Diagram(
+            "BGP Sessions",
+            show=False,
+            filename=filename,
+            direction="LR",
+            outformat=outformat,
+        ):
+            # Initialize an empty dictionary which will have a key and Diagram object based on each element
+            # (peering session dictionary) of the list
+            routers = {}
+
+            for session in bgp_sessions:
+                # Create each local nodes
+                local_key = f"{session['hostname']}_{session['asn']}"
+                if local_key not in routers:
+                    routers[local_key] = Router(
+                        f"{session['hostname']}\nAS {session['asn']}"
+                    )
+
+                # Create peer nodes
+                peer_key = f"{session['peerHostname']}_{session['peerAsn']}"
+                if peer_key not in routers:
+                    routers[peer_key] = Router(
+                        f"{session['peerHostname']}\nAS {session['peerAsn']}"
+                    )
+
+                # Create edge with session details
+                edge_label = f"State: {session['state']}\nVRF: {session['vrf']}"
+                routers[local_key] - Edge(label=edge_label) - routers[peer_key]
+
+    except Exception as e:
+        print("\n\nDIAGRAM ERROR!!")
+        print(f"{e}\n\n")
+
+
+def get_template_selection(options):
+    """
+    Example Only - Currently Not Used
+    Function to enumerate templates in the templates directory for interactive user selection
+    :param options:
+    :return: selected template
+    """
+    # Display numbered options
+    for index, item in enumerate(options, start=1):
+        print(f"{index}. {item}")
+
+    # Get user input and validate
+    while True:
+        try:
+            choice = int(input("Enter the number of your choice: "))
+            if 1 <= choice <= len(options):
+                return options[choice - 1]
+            else:
+                print("Invalid choice. Please try again.")
+        except ValueError:
+            print("Please enter a valid number.")
 
 
 def main():
