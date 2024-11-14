@@ -1,0 +1,10 @@
+dev1,optic1,intf1,desc1,dev2,optic2,int2,desc2,distance_m
+den-core1,GLC-TE,Et1,WAN,den-wan1,GLC-TE,Et1,WAN,7
+den-core1,SFP-H10GB-CU3M,Et2,Dist,den-dist1,SFP-H10GB-CU3M,Et1,Core,2
+den-core1,SFP-H10GB-CU3M,Et3,Dist,den-dist1,SFP-H10GB-CU3M,Et2,Core,2
+den-dist1,SFP-10G-SR-S,Et3,Acc1,den-acc1,SFP-10G-SR-S,Et1,Dist,100
+den-dist1,SFP-10G-SR-S,Et4,Acc1,den-acc2,SFP-10G-SR-S,Et2,Dist,100
+den-dist1,SFP-10G-SR-S,Et5,Acc2,den-acc2,SFP-10G-SR-S,Et1,Dist,200
+den-dist1,SFP-10G-SR-S,Et6,Acc2,den-acc2,SFP-10G-SR-S,Et2,Dist,200
+den-dist1,SFP-10G-SR-S,Et7,Acc3,den-acc3,SFP-10G-SR-S,Et1,Dist,10000
+den-dist1,SFP-10G-SR-S,Et8,Acc3,den-acc3,SFP-10G-SR-S,Et2,Dist,10000

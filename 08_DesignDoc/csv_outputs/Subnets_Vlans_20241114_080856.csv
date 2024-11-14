@@ -1,0 +1,10 @@
+location,subnet,cidr,vlan,desc,hostname,interface,interface desc,guidelines
+DEN,128.66.0.1,32,,,den-core1,Loopback0,L3 loopback,
+DEN,128.66.0.2,32,,,den-dist1,Loopback0,L3 loopback,
+DEN,128.66.1.0,25,20.0,Users,den-dist1,Vlan20,SVI,configured on all access without SVI
+DEN,128.66.1.128,25,30.0,IoT,den-dist1,Vlan30,SVI,configured on all access without SVI
+DEN,128.66.2.0,25,10.0,Infra,den-dist1,Vlan10,SVI,configured on all access without SVI
+DEN,128.66.2.128,25,40.0,Guests,den-dist1,Vlan40,SVI,configured on all access without SVI
+DEN,128.66.0.128,25,22.0,Mgmt,den-core1,Vlan22,SVI,configured on all switches for management
+DEN,192.168.0.0,30,2.0,P2P L6,den-core1,Vlan2,SVI P2P L3,
+DEN,192.168.0.0,30,2.0,P2P L6,den-dist1,Vlan2,SVI P2P L3,
