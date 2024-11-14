@@ -133,6 +133,13 @@ In other mini projects we will always send a dictionary or a list of dictionarie
 - jinja2
 - diagrams
 
+Note:  The diagrams module requires the installation of the Graphviz application
+
+[Diagrams Getting Started > Installation](https://diagrams.mingrammer.com/docs/getting-started/installation)
+
+Native installation for Windows Users without a package manager
+https://forum.graphviz.org/t/new-simplified-installation-procedure-on-windows/224
+
 This mini project also starts to use the utils script at the top level of the repository as a module which is imported.
 
 - utils (local module)
