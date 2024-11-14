@@ -115,6 +115,27 @@ def save_file(fn, text):
     return fn
 
 
+def save_json_payload(payload, filename):
+    """
+    Save a JSON payload to a file.
+
+    Args:
+    payload (dict): The JSON payload to be saved.
+    filename (str): The name of the file to save the JSON payload to.
+
+    Returns:
+    None
+    """
+    try:
+        with open(filename, 'w') as json_file:
+            json.dump(payload, json_file, indent=4)
+        print(f"JSON payload successfully saved to {filename}")
+    except IOError as e:
+        print(f"Error writing to file: {e}")
+    except json.JSONDecodeError as e:
+        print(f"Error encoding JSON: {e}")
+
+
 def check_and_create_directory(directory_path):
     if not os.path.exists(directory_path):
         os.makedirs(directory_path)
