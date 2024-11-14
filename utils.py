@@ -25,8 +25,11 @@ import argparse
 import datetime
 import platform
 import requests
+import openpyxl
 import ipaddress
 import itertools
+
+import pandas as pd
 
 
 # Disable  Unverified HTTPS request is being made to host messages
@@ -703,12 +706,74 @@ def check_stp_switch(vlanx, switch):
     return vlan_has_stp_root, sq_api_response
 
 
-def file_timestamp():
-    return datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+def file_timestamp(dat_tim_delim="-"):
+    return datetime.datetime.now().strftime(f"%Y%m%d{dat_tim_delim}%H%M%S")
 
 
 def human_readable_timestamp():
     return datetime.datetime.now().strftime("%B %d, %Y at %I:%M %p")
+
+
+def extract_excel_to_csv(file_path):
+    # Load the workbook
+    workbook = openpyxl.load_workbook(file_path)
+
+    # Get the current timestamp
+    timestamp = file_timestamp(dat_tim_delim="_")
+
+    # Create a directory to save CSVs if it doesn't exist
+    os.makedirs('csv_outputs', exist_ok=True)
+
+    # Iterate over each sheet in the workbook
+    for sheet_name in workbook.sheetnames:
+        # Read the data from the sheet
+        sheet = workbook[sheet_name]
+        data = list(sheet.values)
+
+        # Convert to a DataFrame, using the first row as column names
+        df = pd.DataFrame(data[1:], columns=data[0])
+
+        # Save the DataFrame to a CSV file with a timestamp
+        csv_file_name = f'csv_outputs/{sheet_name}_{timestamp}.csv'
+        df.to_csv(csv_file_name, index=False)
+        print(f'Saved {csv_file_name}')
+
+
+def high_level_design_diagram():
+    """
+    Used to generate a "dummy" diagram for the 08 Design Document
+    Note: Not part of the venv for the repot by default
+    import matplotlib.pyplot as plt
+    import networkx as nx
+    :return:
+    """
+    # Create a directory named 'images' if it doesn't exist
+    os.makedirs('images', exist_ok=True)
+
+    # Create a basic network topology graph
+    G = nx.Graph()
+
+    # Adding nodes (representing devices)
+    devices = ['Router', 'Switch1', 'Switch2', 'Server', 'PC1', 'PC2', 'Laptop']
+    G.add_nodes_from(devices)
+
+    # Adding edges (representing connections)
+    edges = [('Router', 'Switch1'), ('Router', 'Switch2'), ('Switch1', 'Server'), ('Switch1', 'PC1'), ('Switch2', 'PC2'), ('Switch2', 'Laptop')]
+    G.add_edges_from(edges)
+
+    # Position nodes using a spring layout
+    pos = nx.spring_layout(G)
+
+    # Draw the nodes and edges
+    plt.figure(figsize=(10, 7))
+    nx.draw(G, pos, with_labels=True, node_color='skyblue', node_size=3000, font_size=12, font_weight='bold', edge_color='gray')
+
+    # Set title
+    plt.title('General Network Topology')
+
+    # Save the image in the 'images' directory
+    plt.savefig('high_level_design.jpg', format='jpg', bbox_inches='tight')
+    plt.close()
 
 
 def main():
