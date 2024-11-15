@@ -21,7 +21,7 @@ options:
   -u USERNAME, --username USERNAME
                         Service Now (SNOW) Personal Developer Instance Username. Default: admin
   -p PASSWORD, --password PASSWORD
-                        Service Now (SNOW) Personal Developer Instance password. Default: empty string
+                        Service Now (SNOW) Personal Developer Instance password. Default: empty string ()
 
 Usage: ' python gen_new_vlan_cr.py'
 
@@ -35,6 +35,7 @@ Saved resulting CR file in current directory to LAX_Campus_NewVlan300_SNOW_STDCR
 
 ```
 
+SNOW credentials can be obtained from Claudia, Lucas, or Mike!
 
 Output TXT file:
 
