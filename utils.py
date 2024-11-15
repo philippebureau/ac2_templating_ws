@@ -18,6 +18,7 @@ import os
 import csv
 import yaml
 import json
+
 # import hvac # Used for Vault but not in final repo
 import jinja2
 import dotenv
@@ -129,7 +130,7 @@ def save_json_payload(payload, filename):
     None
     """
     try:
-        with open(filename, 'w') as json_file:
+        with open(filename, "w") as json_file:
             json.dump(payload, json_file, indent=4)
         print(f"JSON payload successfully saved to {filename}")
     except IOError as e:
@@ -457,12 +458,12 @@ def get_username():
     """
     system = platform.system().lower()
 
-    if system == 'darwin' or system == 'linux':
-        return os.environ.get('USER')
-    elif system == 'windows':
-        return os.environ.get('USERNAME')
+    if system == "darwin" or system == "linux":
+        return os.environ.get("USER")
+    elif system == "windows":
+        return os.environ.get("USERNAME")
     else:
-        return os.path.expanduser('~').split(os.sep)[-1]
+        return os.path.expanduser("~").split(os.sep)[-1]
 
 
 def replace_special_chars(text):
@@ -746,7 +747,7 @@ def extract_excel_to_csv(file_path):
     timestamp = file_timestamp(dat_tim_delim="_")
 
     # Create a directory to save CSVs if it doesn't exist
-    os.makedirs('csv_outputs', exist_ok=True)
+    os.makedirs("csv_outputs", exist_ok=True)
 
     # Iterate over each sheet in the workbook
     for sheet_name in workbook.sheetnames:
@@ -758,9 +759,9 @@ def extract_excel_to_csv(file_path):
         df = pd.DataFrame(data[1:], columns=data[0])
 
         # Save the DataFrame to a CSV file with a timestamp
-        csv_file_name = f'csv_outputs/{sheet_name}_{timestamp}.csv'
+        csv_file_name = f"csv_outputs/{sheet_name}_{timestamp}.csv"
         df.to_csv(csv_file_name, index=False)
-        print(f'Saved {csv_file_name}')
+        print(f"Saved {csv_file_name}")
 
 
 def high_level_design_diagram():
@@ -772,17 +773,24 @@ def high_level_design_diagram():
     :return:
     """
     # Create a directory named 'images' if it doesn't exist
-    os.makedirs('images', exist_ok=True)
+    os.makedirs("images", exist_ok=True)
 
     # Create a basic network topology graph
     G = nx.Graph()
 
     # Adding nodes (representing devices)
-    devices = ['Router', 'Switch1', 'Switch2', 'Server', 'PC1', 'PC2', 'Laptop']
+    devices = ["Router", "Switch1", "Switch2", "Server", "PC1", "PC2", "Laptop"]
     G.add_nodes_from(devices)
 
     # Adding edges (representing connections)
-    edges = [('Router', 'Switch1'), ('Router', 'Switch2'), ('Switch1', 'Server'), ('Switch1', 'PC1'), ('Switch2', 'PC2'), ('Switch2', 'Laptop')]
+    edges = [
+        ("Router", "Switch1"),
+        ("Router", "Switch2"),
+        ("Switch1", "Server"),
+        ("Switch1", "PC1"),
+        ("Switch2", "PC2"),
+        ("Switch2", "Laptop"),
+    ]
     G.add_edges_from(edges)
 
     # Position nodes using a spring layout
@@ -790,15 +798,23 @@ def high_level_design_diagram():
 
     # Draw the nodes and edges
     plt.figure(figsize=(10, 7))
-    nx.draw(G, pos, with_labels=True, node_color='skyblue', node_size=3000, font_size=12, font_weight='bold', edge_color='gray')
+    nx.draw(
+        G,
+        pos,
+        with_labels=True,
+        node_color="skyblue",
+        node_size=3000,
+        font_size=12,
+        font_weight="bold",
+        edge_color="gray",
+    )
 
     # Set title
-    plt.title('General Network Topology')
+    plt.title("General Network Topology")
 
     # Save the image in the 'images' directory
-    plt.savefig('high_level_design.jpg', format='jpg', bbox_inches='tight')
+    plt.savefig("high_level_design.jpg", format="jpg", bbox_inches="tight")
     plt.close()
-
 
 
 def create_bgp_diagram(bgp_sessions, filename="bgp_sessions", outformat="png"):
@@ -870,13 +886,17 @@ def get_template_selection(options):
 
 
 def main():
-    pass
+    print(
+        "\nThis script contains commonly used functions and is intended to serve as a utility module for other "
+        "scripts in the repository."
+    )
+    print("It is not intended to be executed directly.\n")
 
 
 # Standard call to the main() function.
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Script Description", epilog="Usage: ' python utils' "
+        description="Script Description", epilog="Usage: import utils "
     )
     arguments = parser.parse_args()
     main()
