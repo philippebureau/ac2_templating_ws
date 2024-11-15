@@ -888,12 +888,101 @@ def get_template_selection(options):
             print("Please enter a valid number.")
 
 
+def get_neo_data(start_date=None, end_date=None, api_key='YOUR_API_KEY'):
+    """
+    a python function which extracts near earth orbit objects from a nasa data set
+    nd returns a JSON file with near earth objects for today's date
+    :param start_date:
+    :param end_date:
+    :param api_key:
+    :return:
+    """
+    # If no dates provided, use today's date
+    if not start_date:
+        start_date = datetime.datetime.now().strftime('%Y-%m-%d')
+    if not end_date:
+        end_date = start_date
+
+    # NASA NeoWs API endpoint
+    url = f"https://api.nasa.gov/neo/rest/v1/feed?start_date={start_date}&end_date={end_date}&api_key={api_key}"
+
+    # Make the API request
+    response = requests.get(url)
+
+    print(f"\nLooking at the NEO database for date range: {start_date} to {end_date}\n")
+
+    if response.status_code == 200:
+        data = response.json()
+
+        # Write the data to a JSON file
+        filename = f"nasa_near_earth_objects_{file_timestamp()}.json"
+        with open(filename, 'w') as f:
+            json.dump(data, f, indent=2)
+
+        print(f"NEO data saved to {filename}")
+        return data
+    else:
+        print(f"Error: Unable to retrieve data. Status code: {response.status_code}")
+        return None
+
+
+def json_to_yaml(input_json_file, output_yaml_file):
+    """
+    Function which reads in a JSON file and saves it as YAML
+    :param input_json_file:
+    :param output_yaml_file:
+    :return:
+    """
+    # Read the JSON file
+    with open(input_json_file, 'r') as json_file:
+        json_data = json.load(json_file)
+
+    # Write the data to a YAML file
+    with open(output_yaml_file, 'w') as yaml_file:
+        yaml.dump(json_data, yaml_file, default_flow_style=False)
+
+    print(f"\nSuccessfully converted {input_json_file} to {output_yaml_file}\n")
+
+
+def sort_filenames_by_length(filenames):
+    """
+    Sort a list of filenames based on their length in ascending order.
+
+    Args:
+    filenames (list): A list of filename strings
+
+    Returns:
+    list: A new list of filenames sorted by their length
+    """
+    return sorted(filenames, key=len)
+
+
+
 def main():
     print(
         "\nThis script contains commonly used functions and is intended to serve as a utility module for other "
         "scripts in the repository."
     )
     print("It is not intended to be executed directly.\n")
+
+    # neodata = get_neo_data(api_key="")
+    #
+    # neo_dict = dict()
+    # for list in neodata['near_earth_objects']['2024-11-15']:
+    #     # print(list)
+    #     neo_dict.update({list['id']:
+    #         {"id": list['id'],
+    #         "name": list['name'],
+    #         "est_max_diameter_m": list['estimated_diameter']['meters']['estimated_diameter_max'],
+    #         "is_ele": list['is_potentially_hazardous_asteroid'],  # Extintion level event,
+    #         "jpl_url": list['nasa_jpl_url'],
+    #         },
+    #     })
+    #
+    # pprint.pprint(neo_dict)
+    #
+    # save_json_payload(neo_dict, "json_nasa_near_earth_objects_dict.json")
+    # json_to_yaml("json_nasa_near_earth_objects_dict.json", "yaml_nasa_near_earth_objects_dict.yml")
 
 
 # Standard call to the main() function.
