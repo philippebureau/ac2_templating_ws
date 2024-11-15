@@ -4,18 +4,18 @@
 
 This project will start to familiarize you with the overall repository environment as well as some lessons learned.
 
-Please open the `bgp_report_starter.py` script in your favorite editor and lets get to work!
+Please open the `gen_bgp_report_starter.py` script in your favorite editor and lets get to work!
 
 ```python
-% python bgp_report_starter.py
+% python gen_bgp_report_starter.py
 Starter script needs to be updated!!
 ```
 
 
 
 ```python
-% python bgp_report_starter.py -h
-usage: bgp_report_starter.py [-h] [-t TITLE] [-l LOCATION]
+% python gen_bgp_report_starter.py -h
+usage: gen_bgp_report_starter.py [-h] [-t TITLE] [-l LOCATION]
 
 Script Description
 
@@ -26,7 +26,7 @@ options:
   -l LOCATION, --location LOCATION
                         Location Default: GDL Campus
 
-Usage: ' python bgp_report_starter.py' or python bgp_report_starter.py -l 'AMS Campus'
+Usage: ' python gen_bgp_report_starter.py' or python gen_bgp_report_starter.py -l 'AMS Campus'
 ```
 
 
@@ -158,12 +158,12 @@ One option would be to extract BGP information from Suzieq via a REST call.
 ├── 01_CurrentStateReport
 │   ├── GDL_bgp.json
 │   ├── README.md
-│   ├── bgp_report_starter.py
+│   ├── gen_bgp_report_starter.py
 │   ├── templates
 │   │   └── bgp_report_md.j2
 │   └── working_example
 │       ├── GDL_Campus_BGP_Diagram.jpg
 │       ├── GDL_Campus_BGP_REPORT.md
-│       └── bgp_report.py
+│       └── gen_bgp_report.py
 ```
 
