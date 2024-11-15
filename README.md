@@ -103,6 +103,7 @@ Note:  diagrams requires the installation of the Graphviz application
 Native installation for Windows Users without a package manager
 https://forum.graphviz.org/t/new-simplified-installation-procedure-on-windows/224
 
+[Installation instructions for MacOSX, Windows10/11, and Linux](https://www.perplexity.ai/page/installing-graphviz-on-windows-fzF5FhQASHqTyyOYDD6ODQ)
 
 
 #### Uninstall all
