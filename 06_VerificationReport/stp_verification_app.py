@@ -179,23 +179,35 @@ def main():
             for sw in selected_switches:
                 # Check to see if the vlan is configured on each switch
                 vlan_on_sw, vlan_resp = utils.find_vlan_on_switch(vlan_id, sw)
-                if vlan_on_sw:
-                    st.write(f"Vlan {vlan_id} Configured on Switch {sw}")
-                else:
-                    st.write(f"Vlan {vlan_id} NOT on Switch {sw}")
-                    vlan_configured_bool = False
-                    sw_missing_vlan_list.append(sw)
+
+                if vlan_resp.ok:
+                    if vlan_on_sw:
+                        st.write(f"Vlan {vlan_id} Configured on Switch {sw}")
+                    else:
+                        st.write(f"Vlan {vlan_id} NOT on Switch {sw}")
+                        vlan_configured_bool = False
+                        sw_missing_vlan_list.append(sw)
+                    # Saving the response so we hae a local copy of the data, just in case
+                    if vlan_resp.json():
+                        utils.save_json_payload(vlan_resp.json(), "vlan_response_from_suzieq.json")
 
                 # Check to see if the vlan is participating in spanning tree
                 stp_root_on_sw_bool, stp_resp = utils.check_stp_switch(vlan_id, sw)
-                df = pd.DataFrame(stp_resp.json())
-                if stp_root_on_sw_bool:
-                    st.write(f"Vlan {vlan_id} participating in STP and has root {sw}")
-                else:
-                    st.write(f"Vlan {vlan_id} STP has no root on {sw}")
-                    stp_root_bool = False
-                    stp_problem_list.append(sw)
-                st.write(df)
+
+                if stp_resp.ok:
+
+                    df = pd.DataFrame(stp_resp.json())
+                    if stp_root_on_sw_bool:
+                        st.write(f"Vlan {vlan_id} participating in STP and has root {sw}")
+                    else:
+                        st.write(f"Vlan {vlan_id} STP has no root on {sw}")
+                        stp_root_bool = False
+                        stp_problem_list.append(sw)
+                    st.write(df)
+
+                    # Saving the response so we hae a local copy of the data, just in case
+                    if stp_resp.json():
+                        utils.save_json_payload(vlan_resp.json(), "stp_response_from_suzieq.json")
 
             if vlan_configured_bool:
                 msg = f":thumbsup: Vlan {vlan_id} is configured on all switches!"

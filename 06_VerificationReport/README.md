@@ -1,6 +1,7 @@
 # Verification Mini Project
+## STP Verification Report App
 
-This mini project is an example of how to use observability tools for verificaiton.
+This mini project is an example of how to use observability tools for verification.
 
 We will use SuzieQ to verify spanning tree for selected vlans.
 
@@ -33,6 +34,7 @@ To run the app locally enter the following command via CLI from the 06_Verificat
 % streamlit run stp_verification_app.py 
 ```
 
+CTRL-C to stop
 
 ```
 (venv-ac2jinja) claudiadeluna in ~/Indigo Wire Networks Dropbox/Claudia de Luna/scripts/python/2024/ac2_templating_workshop/06_VerificationReport on main
