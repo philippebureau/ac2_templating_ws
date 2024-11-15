@@ -48,8 +48,7 @@ def prompt():
 
     2. using the CSV files in the csv_outputs directory
     
-    With an understanding of the design data available to you, manipulate the design data into an appropriate payload
-    for the template.
+    With an understanding of the design data available to you, manipulate the design data into an appropriate payload for the template.
     
     Update the template accordingly.
     
@@ -58,9 +57,9 @@ def prompt():
     
     render_in_one
     
-    providing you make the appropriate variable adjustments
+    providing you make the appropriate variable adjustments.
     
-    Save the rendered file as Markdown.
+    Save the rendered file as Markdown and include the location in the filename.
     
     Craft text suitable for a Change Control ticket and save in a change_request_text.txt file.
     
