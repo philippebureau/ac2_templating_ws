@@ -68,32 +68,23 @@ pip install -r requirements.txt
 
 ```
 
-pip install pytz
-
-pip install black
-
-pip install jinja2
-
-pip install solara
-
-pip install pyyaml
-
-pip install pandas
-
-pip install diagrams
-
-pip install openpyxl
-
-pip install streamlit
-
-pip install python-dotenv
+- pip install pytz
+- pip install black
+- pip install jinja2
+- pip install solara
+- pip install pyyaml
+- pip install pandas
+- pip install diagrams
+- pip install openpyxl
+- pip install streamlit
+- pip install python-dotenv
 
 
-Insalled but unused
+##### Installed but unused
 
-pip install httpx
-pip install notebook
-pip install jupyterlab
+- pip install httpx
+- pip install notebook
+- pip install jupyterlab
 
 
 Note:  diagrams requires the installation of the Graphviz application
