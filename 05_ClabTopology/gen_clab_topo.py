@@ -150,8 +150,7 @@ def main():
     if response.ok:
         # Saving the response so we hae a local copy of the data, just in case
         if response.json():
-            utils.save_json_payload(response.json(), "topology_response_from_suzieq.json")
-
+            utils.save_json_payload(response.json(), f"topology_response_from_suzieq_{utils.file_timestamp()}.json")
     else:
         print(response)
         exit(
