@@ -75,6 +75,7 @@ pip install -r requirements.txt
 - pip install pyyaml
 - pip install pandas
 - pip install diagrams
+- pip install requests
 - pip install openpyxl
 - pip install streamlit
 - pip install python-dotenv
