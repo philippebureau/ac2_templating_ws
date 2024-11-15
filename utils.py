@@ -564,6 +564,9 @@ def get_namespace_list():
         print(f"Status Code: {ns_response.status_code}")
         print(f"Reason: {ns_response.reason}")
         print(ns_response.json())
+        print("Please make sure you have a .env file (rename the .env_sample) at the root of the repository "
+              "with the correct API Token.")
+        print("Token can be obtained from any of the instructors.")
 
     return namespace_list, ns_response
 
