@@ -89,6 +89,12 @@ pip install streamlit
 pip install python-dotenv
 
 
+Insalled but unused
+
+pip install httpx
+pip install notebook
+pip install jupyterlab
+
 
 Note:  diagrams requires the installation of the Graphviz application
 
