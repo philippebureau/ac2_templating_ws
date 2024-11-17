@@ -15,6 +15,7 @@ __license__ = "Python"
 
 import os
 import jinja2
+import pathlib
 
 
 def load_cfg_data():
@@ -84,10 +85,11 @@ def main():
     # This is the directory where we will store the resulting config files
     output_dir = "cfg_output"
     cfg_directory = os.path.join(os.getcwd(), output_dir)
-    utils.check_and_create_directory(cfg_directory)
+    pathlib.Path(cfg_directory).mkdir(exist_ok=True)
+    # utils.check_and_create_directory(cfg_directory)
 
     # Save the configuration to a file
-    file_name = f"{cfg_data['hostname']}_router_config.txt"
+    file_name = f"{cfg_data['hostname']}_router_config_using_inheritance_extends.txt"
     fp = os.path.join(cfg_directory, file_name)
 
     with open(file_name, "w") as f:

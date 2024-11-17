@@ -15,6 +15,7 @@ __license__ = "Python"
 
 import os
 import jinja2
+import pathlib
 
 
 def load_cfg_data():
@@ -73,8 +74,16 @@ def main():
     # Render configuration
     config = template.render(cfg_data)
 
-    # Write configuration to file
-    file_name = f"{cfg_data['hostname']}_router_config.txt"
+    # Check to see if the output directory exists and if it does not, create it
+    # This is the directory where we will store the resulting config files
+    output_dir = "cfg_output"
+    cfg_directory = os.path.join(os.getcwd(), output_dir)
+    pathlib.Path(cfg_directory).mkdir(exist_ok=True)
+
+    # Save the configuration to a file
+    file_name = f"{cfg_data['hostname']}_router_config_using_includes.txt"
+    fp = os.path.join(cfg_directory, file_name)
+
     with open(file_name, "w") as f:
         f.write(config)
 
