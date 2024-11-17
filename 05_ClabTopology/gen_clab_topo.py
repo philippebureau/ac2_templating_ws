@@ -179,7 +179,7 @@ def main():
         f"\nContainerlab Topology file saved to {filename} in current working directory.\n"
     )
 
-    # Optional action to generate a Mermail Graph of the topology
+    # Optional action to generate a Mermaid Graph of the topology
     if arguments.graph:
 
         # Generate Mermaid text from the updated YAML
