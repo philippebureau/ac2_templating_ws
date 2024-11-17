@@ -140,9 +140,6 @@ def main():
     :return:
     """
 
-    # Initialize payload dictionary of payload to send to template
-    pld = dict()
-
     # One option could be to have the user pick from a valid list of namespaces
     namespaces, full_response = utils.get_namespace_list()
 
@@ -160,24 +157,27 @@ def main():
             f"the environment variable SQ_API_TOKEN. \nRename .env_sample to .env\n\n"
         )
 
-    pld.update({"name": f"{arguments.namespace}_clab_topology"})
-    pld.update({"kind": "ceos"})
-    pld.update({"image": "ceos:latest"})
-
-    # Generate the topology data
+    # Generate the topology data using the local function generate_topology
     topology_data = generate_topology(response.json())
 
     # Render the Jinja2 template
     clab_topology = utils.render_in_one("lldp_topology_template.j2", topology_data, search_dir=".")
 
-    # Optionally, save the YAML topology to a file
-    filename = f"{topology_data['name']}.clab.yml"
-    with open(filename, "w") as f:
-        f.write(clab_topology)
+    # Check to make sure the topology has data (nodes and links)
+    if topology_data['nodes'] and topology_data['links']:
+        # Save the YAML topology to a file if we have node and link data
+        filename = f"{topology_data['name'].lower()}.clab.yml"
+        with open(filename, "w") as f:
+            f.write(clab_topology)
 
-    print(
-        f"\nContainerlab Topology file saved to {filename} in current working directory.\n"
-    )
+        print(
+            f"\nContainerlab Topology file saved to {filename} in current working directory.\n"
+        )
+    else:
+        print("\nToplogy has no node or link data. Please review the topology links. Management0 interfaces are dropped")
+        print(topology_data)
+        # Exit script. No sense in generating Mermaid content if the -g option was selected
+        exit("Aborting Run\n")
 
     # Optional action to generate a Mermaid Graph of the topology
     if arguments.graph:
