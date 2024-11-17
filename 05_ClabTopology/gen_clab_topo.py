@@ -133,6 +133,7 @@ def view_mermaid_diagram(mermaid_code: str) -> None:
     # Open the URL in the default web browser
     webbrowser.open(full_url)
 
+    return full_url
 
 def main():
     """
@@ -189,7 +190,10 @@ def main():
         mermaid_code = yaml_to_mermaid(topology_data, dir="RL")
 
         # Generate the mermaid payload and open in local browser
-        view_mermaid_diagram(mermaid_code)
+        mermaid_url = view_mermaid_diagram(mermaid_code)
+        print("\nCopy this URL into your browser if your browser does not launch automatically.\n")
+        print(mermaid_url)
+        print()
 
 
 # Standard call to the main() function.
