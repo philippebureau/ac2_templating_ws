@@ -60,10 +60,14 @@ def create_std_cr_snow(
     headers = {"Content-Type": "application/json", "Accept": "application/json"}
 
     # Send POST request
-    response = requests.post(
-        url, auth=(username, password), headers=headers, data=json.dumps(payload)
-    )
-
+    try:
+        response = requests.post(
+            url, auth=(username, password), headers=headers, data=json.dumps(payload)
+        )
+    except Exception as e:
+        print("\nERROR in request! Please verify your SNOW URL and credentials!\n")
+        print(e)
+        exit("\nAborting Run!\n")
     # Check response
     # A 201 status code is returned when a new resource is created
     if response.status_code == 201:
