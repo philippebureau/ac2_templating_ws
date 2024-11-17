@@ -43,9 +43,15 @@ def main():
     print("Combined Switch Configuration:")
     print(combined_config)
 
-    # Optionally, save the configuration to a file
+    # Check to see if the output directory exists and if it does not, create it
+    # This is the directory where we will store the resulting config files
+    output_dir = "cfg_output"
+    cfg_directory = os.path.join(os.getcwd(), output_dir)
+    utils.check_and_create_directory(cfg_directory)
+
+    # Save the configuration to a file
     filename = "combined_switch_config_include.txt"
-    fp = os.path.join(os.getcwd(), filename)
+    fp = os.path.join(cfg_directory, filename)
     with open(fp, 'w') as f:
         f.write(combined_config)
 
@@ -61,4 +67,6 @@ if __name__ == '__main__':
     # parser.add_argument('all', help='Execute all exercises in week 4 assignment')
     # parser.add_argument('-a', '--all', help='Execute all exercises in week 4 assignment', action='store_true',default=False)
     arguments = parser.parse_args()
+
+
     main()

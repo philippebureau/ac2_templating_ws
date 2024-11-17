@@ -55,17 +55,28 @@ def main():
     print("\nTACACS Server Configuration:")
     print(tacacs_server_config)
 
+    # Check to see if the output directory exists and if it does not, create it
+    # This is the directory where we will store the resulting config files
+    output_dir = "cfg_output"
+    cfg_directory = os.path.join(os.getcwd(), output_dir)
+    utils.check_and_create_directory(cfg_directory)
+
+    # Save the configuration to a file
+    complete_filename = 'mod_extend_combined_config.txt'
+    fp = os.path.join(cfg_directory, filename)
+
     # Optionally, save the configurations to files
-    with open('mod_extend_base_config.txt', 'w') as f:
-        f.write(base_config)
+    # with open('mod_extend_base_config.txt', 'w') as f:
+    #     f.write(base_config)
+    #
+    # with open('mod_extend_user_interface_config.txt', 'w') as f:
+    #     f.write(user_interface_config)
+    #
+    # with open('mod_extend_tacacs_server_config.txt', 'w') as f:
+    #     f.write(tacacs_server_config)
 
-    with open('mod_extend_user_interface_config.txt', 'w') as f:
-        f.write(user_interface_config)
 
-    with open('mod_extend_tacacs_server_config.txt', 'w') as f:
-        f.write(tacacs_server_config)
-
-    with open('mod_extend_combined_config.txt', 'a') as f:
+    with open(fp, 'a') as f:
         f.write(base_config)
         f.write(user_interface_config)
         f.write(tacacs_server_config)
