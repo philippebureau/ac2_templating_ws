@@ -46,6 +46,12 @@ def prompt():
     
     # https://172.16.14.4:8443/api/v2/extdb/show?ext_table=newDevs&view=latest&namespace=DEN_Campus&columns=default&reverse=false&include_deleted=false&show_exceptions=false
 
+    The three tables with design data are:
+
+    connMatrix
+    newDevs
+    subnetVlans
+
     2. using the CSV files in the csv_outputs directory
     
     With an understanding of the design data available to you, manipulate the design data into an appropriate payload for the template.
