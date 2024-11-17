@@ -12,9 +12,10 @@ __date__ = "10/10/24"
 __copyright__ = "Copyright (c) 2023 Claudia"
 __license__ = "Python"
 
-import argparse
-import jinja2
 import os
+import jinja2
+import pathlib
+import argparse
 
 
 def main():
@@ -47,7 +48,7 @@ def main():
     # This is the directory where we will store the resulting config files
     output_dir = "cfg_output"
     cfg_directory = os.path.join(os.getcwd(), output_dir)
-    utils.check_and_create_directory(cfg_directory)
+    pathlib.Path(cfg_directory).mkdir(exist_ok=True)
 
     # Save the configuration to a file
     filename = "combined_switch_config_include.txt"
