@@ -51,7 +51,7 @@ def generate_topology(links):
             {"endpoints": [f"{node1}:eth{i + 1}", f"{node2}:eth{i + 1}"]}
         )
 
-    return {"name": "gdl_campus_topology", "nodes": nodes, "links": processed_links}
+    return {"name": links[0]["namespace"], "nodes": nodes, "links": processed_links}
 
 
 def yaml_to_mermaid(yaml_data, dir="TD"):
