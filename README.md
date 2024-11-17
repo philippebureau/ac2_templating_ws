@@ -51,17 +51,21 @@ In this project, we will use a local YAML file to store the design data required
 ---
 #### Modules
 
+The repository was developed on Mac OS-X using Python 3.10.15 and has also been tested on:
+
+- Windows 10/11 natively and Windows Subsystem for Linux (WSLv2)
+
 Use the requirements.txt file to build your virtual environment
 ``` 
 # Create a virtual environment
 # If you do this within the top level of your repository you will see a new directory called ac2-venv which will hold your virtual environment
-python -m venv ac2-venv
+python -m venv ac2wsb4-venv
 
 # Activate your virtual environment 
 # Windows
-ac2-venv\Source\Activate.bat (or .ps1)
+ac2wsb4-venv\Source\Activate.bat (or .ps1)
 #Mac/Linux
-source ./ac2-venv/bin/activate
+source ./ac2wsb4-venv/bin/activate
 
 # Building the virtual environment
 pip install -r requirements.txt
@@ -102,5 +106,20 @@ https://forum.graphviz.org/t/new-simplified-installation-procedure-on-windows/22
 
 ``` pip uninstall -r requirements.txt -y ```
 
+### Troubleshooting
 
+1. Modules not found when using Python < 3.10.15
+
+   Plan A:  Install pyenv (which is always a good idea)
+
+   If you do not want to upgrade your Python version, we recommend installing pyenv.
+   [Complete `pyenv` installation instructions](https://www.perplexity.ai/page/pyenv-installation-and-usage-g-0nRNLEaiSiqrvuzjsFaXrQ)
+
+   Plan B: Install the modules listed above manually in a virtual environment using python 3.9 or greater
+   
+
+2. Im new to virtual environments, got any tips?
+   This is a great and short introduction that tells you what you need to know and winds up being a great referecen.  Thanks Lucas!
+
+   https://www.freecodecamp.org/news/how-to-setup-virtual-environments-in-python/
 
