@@ -91,7 +91,7 @@ def main():
     file_name = f"{cfg_data['hostname']}_router_config_using_inheritance_extends.txt"
     fp = os.path.join(cfg_directory, file_name)
 
-    with open(file_name, "w") as f:
+    with open(fp, "w") as f:
         f.write(config_sections["base"])
         f.write(config_sections["aaa"])
         f.write(config_sections["interfaces"])

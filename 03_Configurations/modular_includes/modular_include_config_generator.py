@@ -84,7 +84,7 @@ def main():
     file_name = f"{cfg_data['hostname']}_router_config_using_includes.txt"
     fp = os.path.join(cfg_directory, file_name)
 
-    with open(file_name, "w") as f:
+    with open(fp, "w") as f:
         f.write(config)
 
     print(f"\nSaved configuration to file {file_name} in current directory.\n")
