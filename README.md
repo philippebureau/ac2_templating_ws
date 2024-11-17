@@ -123,3 +123,18 @@ https://forum.graphviz.org/t/new-simplified-installation-procedure-on-windows/22
 
    https://www.freecodecamp.org/news/how-to-setup-virtual-environments-in-python/
 
+
+## All Local
+
+| Mini Project                 | Notes on running local only                                  | Requires External Access                                     |
+| ---------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 00_DataStructure_Woodchipper | All local.  All payload files are in the sample_data_structures directory. | No                                                           |
+| 01_CurrentStateReport        | All local.  GDL_bgp.json file is in the directory.           | No                                                           |
+| 02_Procedure                 | All local.  All required files are in the directory          | No                                                           |
+| 03_Configurations            | All local.                                                   | No                                                           |
+| 04_ChangeRequest             | By default all local using the payload.csv file in the directory.  <br />Option -c, --create_cr allows for the creation of the ticket in service now.<br />`python gen_new_vlan_cr.py -c -s "snow FQDN" -u "username" -p "password" | No<br />Optional Personal Developers Instance of Sevice Now  |
+| 05_ClabTopology              | By default, expects to extract topology payload from the SuzieQ server.<br />There is a local topology file but the script needs to be updated to use it. | Yes. <br />CloudMyLab SuzieQ Server<br />Optional Mermaid Live Editor Diagram |
+| 06_VerificationReportApp     | By default, expects to extract STP payload from SuzieQ server | Yes. <br />CloudMyLab SuzieQ Server                          |
+| 07_SoW                       | By default, expects to extract design payload from SuzieQ server | Yes. <br />CloudMyLab SuzieQ Server                          |
+| 08_DesignDoc                 | By default, the assignment involves accessing design data on the SuzieQ Server and optionally creating a ticket in a SNOW PDI.<br /><br />The directory does contain an Excel file of the design data (Design_Data_NewSite.xlsx). | Yes. <br />CloudMyLab SuzieQ Server                          |
+
