@@ -182,6 +182,9 @@ def main():
     # Optional action to generate a Mermaid Graph of the topology
     if arguments.graph:
 
+        print("\nGenerating Mermaid Diagram! Your default browser should launch into the Mermaid Live Editor.")
+        print("Tip: If the diagram does not appear, click the FULL SCREEN button.\n")
+
         # Generate Mermaid text from the updated YAML
         mermaid_code = yaml_to_mermaid(topology_data, dir="RL")
 
