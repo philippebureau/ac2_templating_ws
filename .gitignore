@@ -27,3 +27,4 @@ clab_topology_template.j2
 free*
 vyos*
 *.webp
+.python-version
