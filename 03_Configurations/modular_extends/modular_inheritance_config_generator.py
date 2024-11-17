@@ -86,7 +86,6 @@ def main():
     output_dir = "cfg_output"
     cfg_directory = os.path.join(os.getcwd(), output_dir)
     pathlib.Path(cfg_directory).mkdir(exist_ok=True)
-    # utils.check_and_create_directory(cfg_directory)
 
     # Save the configuration to a file
     file_name = f"{cfg_data['hostname']}_router_config_using_inheritance_extends.txt"
