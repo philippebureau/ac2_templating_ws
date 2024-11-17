@@ -79,8 +79,16 @@ def main():
     print(config_sections["interfaces"])
     print(config_sections["ospf"])
 
-    # Write configuration to file
+    # Check to see if the output directory exists and if it does not, create it
+    # This is the directory where we will store the resulting config files
+    output_dir = "cfg_output"
+    cfg_directory = os.path.join(os.getcwd(), output_dir)
+    utils.check_and_create_directory(cfg_directory)
+
+    # Save the configuration to a file
     file_name = f"{cfg_data['hostname']}_router_config.txt"
+    fp = os.path.join(cfg_directory, file_name)
+
     with open(file_name, "w") as f:
         f.write(config_sections["base"])
         f.write(config_sections["aaa"])

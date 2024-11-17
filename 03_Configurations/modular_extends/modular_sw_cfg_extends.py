@@ -63,7 +63,7 @@ def main():
 
     # Save the configuration to a file
     complete_filename = 'mod_extend_combined_config.txt'
-    fp = os.path.join(cfg_directory, filename)
+    fp = os.path.join(cfg_directory, complete_filename)
 
     # Optionally, save the configurations to files
     # with open('mod_extend_base_config.txt', 'w') as f:
