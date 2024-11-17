@@ -117,7 +117,6 @@ https://forum.graphviz.org/t/new-simplified-installation-procedure-on-windows/22
 
    Plan B: Install the modules listed above manually in a virtual environment using python 3.9 or greater
    
-
 2. Im new to virtual environments, got any tips?
    This is a great and short introduction that tells you what you need to know and winds up being a great referecen.  Thanks Lucas!
 
@@ -133,8 +132,8 @@ https://forum.graphviz.org/t/new-simplified-installation-procedure-on-windows/22
 | 02_Procedure                 | All local.  All required files are in the directory          | No                                                           |
 | 03_Configurations            | All local.                                                   | No                                                           |
 | 04_ChangeRequest             | By default all local using the payload.csv file in the directory.  <br />Option -c, --create_cr allows for the creation of the ticket in service now.<br />`python gen_new_vlan_cr.py -c -s "snow FQDN" -u "username" -p "password" | No<br />Optional Personal Developers Instance of Sevice Now  |
-| 05_ClabTopology              | By default, expects to extract topology payload from the SuzieQ server.<br />There is a local topology file but the script needs to be updated to use it. | Yes. <br />CloudMyLab SuzieQ Server<br />Optional Mermaid Live Editor Diagram |
-| 06_VerificationReportApp     | By default, expects to extract STP payload from SuzieQ server | Yes. <br />CloudMyLab SuzieQ Server                          |
-| 07_SoW                       | By default, expects to extract design payload from SuzieQ server | Yes. <br />CloudMyLab SuzieQ Server                          |
+| 05_ClabTopology              | By default, expects to extract topology payload from the SuzieQ server.<br />There is a local topology file but the script needs to be updated to use it.<br /><br />There is command line option -g, --graph which generates Mermaid payload and sends it to the Mermaid Live server. | Yes. <br />CloudMyLab SuzieQ Server<br />Optional Mermaid Live Editor Diagram |
+| 06_VerificationReportApp     | By default, expects to extract STP payload from SuzieQ server. No local option at this time. | Yes. <br />CloudMyLab SuzieQ Server                          |
+| 07_SoW                       | By default, expects to extract design payload from SuzieQ server.  There is a local Excel file of design payload but the script does not support it currently. | Yes. <br />CloudMyLab SuzieQ Server                          |
 | 08_DesignDoc                 | By default, the assignment involves accessing design data on the SuzieQ Server and optionally creating a ticket in a SNOW PDI.<br /><br />The directory does contain an Excel file of the design data (Design_Data_NewSite.xlsx). | Yes. <br />CloudMyLab SuzieQ Server                          |
 
