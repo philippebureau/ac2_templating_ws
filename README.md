@@ -118,7 +118,7 @@ https://forum.graphviz.org/t/new-simplified-installation-procedure-on-windows/22
    Plan B: Install the modules listed above manually in a virtual environment using python 3.9 or greater
    
 2. Im new to virtual environments, got any tips?
-   This is a great and short introduction that tells you what you need to know and winds up being a great referecen.  Thanks Lucas!
+   This is a great and short introduction that tells you what you need to know and winds up being a great reference.  Thanks Lucas!
 
    https://www.freecodecamp.org/news/how-to-setup-virtual-environments-in-python/
 
