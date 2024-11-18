@@ -66,17 +66,6 @@ def main():
     complete_filename = 'mod_extend_combined_config.txt'
     fp = os.path.join(cfg_directory, complete_filename)
 
-    # Optionally, save the configurations to files
-    # with open('mod_extend_base_config.txt', 'w') as f:
-    #     f.write(base_config)
-    #
-    # with open('mod_extend_user_interface_config.txt', 'w') as f:
-    #     f.write(user_interface_config)
-    #
-    # with open('mod_extend_tacacs_server_config.txt', 'w') as f:
-    #     f.write(tacacs_server_config)
-
-
     with open(fp, 'a') as f:
         f.write(base_config)
         f.write(user_interface_config)
@@ -84,6 +73,7 @@ def main():
 
     print("\nCombined configuration has been saved as:")
     print(fp)
+
 
 # Standard call to the main() function.
 if __name__ == '__main__':
