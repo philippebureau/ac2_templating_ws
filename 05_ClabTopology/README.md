@@ -12,9 +12,9 @@ suzieq> topology show via="lldp" namespace=GDL_Campus
 
 Usage:
 
-```python
-% python gen_clab_topo.py -h
-usage: gen_clab_topo.py [-h] [-g] [-n NAMESPACE]
+```bash
+(venv) claudia@Claudias-MacBook-Air 05_ClabTopology % python gen_clab_topo.py -h
+usage: gen_clab_topo.py [-h] [-g] [-n NAMESPACE] [-l]
 
 Script Description
 
@@ -23,8 +23,10 @@ options:
   -g, --graph           Graph the topology in Mermaid Live Editor. Default: False (do not graph)
   -n NAMESPACE, --namespace NAMESPACE
                         Defines the namespace from which to pull topology data from SuzieQ. Default: 'GDL_Campus'
+  -l, --local           Use local data file. Default: False
 
 Usage: ' python gen_clab_topo.py'
+
 
 ```
 
