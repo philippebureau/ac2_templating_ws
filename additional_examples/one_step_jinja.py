@@ -37,7 +37,7 @@ def main():
     }
 
     rendered = utils.render_in_one(
-        "all_in_one.j2", payload_dict, search_dir="../templates", line_comment="#"
+        "all_in_one.j2", payload_dict, search_dir="templates", line_comment="#"
     )
     print(rendered)
 
