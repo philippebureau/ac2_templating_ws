@@ -73,6 +73,7 @@ def main():
 
     print("\nCombined configuration has been saved as:")
     print(fp)
+    print()
 
 
 # Standard call to the main() function.
