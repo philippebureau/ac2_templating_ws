@@ -111,15 +111,15 @@ def main():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Script Description",
-        epilog="Usage: ' python gen_procedure.py' The default payload is 'Installation_details_S2000.yml'.  "
+        epilog="Usage: ' python gen_procedure_starter_starter.py <payload yaml>' Example payload yaml: 'Installation_details_S2000.yml'.  "
                "To use another payload file use the -p option.",
     )
+
+    # parser.add_argument('all', help='Execute all exercises in week 4 assignment')
     parser.add_argument(
-        "-p",
-        "--payload_file",
-        help="YAML Payload file to use. Default: Installation_details_S2000.yml",
-        action="store",
-        default="Installation_details_S2000.yml",
+        "payload_file",
+        help="YAML Payload file to use. Default: Installation_details_S2000.yml"
     )
+
     arguments = parser.parse_args()
     main()
