@@ -56,6 +56,11 @@ def is_user_intf(intf):
 
 
 def load_json(filename):
+    """
+    Safely load a JSON file
+    :param filename:
+    :return:
+    """
 
     try:
         with open(filename, "r") as file:
@@ -140,6 +145,11 @@ def save_json_payload(payload, filename):
 
 
 def check_and_create_directory(directory_path):
+    """
+    Simple function which check to see if a directory exists and if it does not it creates it
+    :param directory_path:
+    :return:
+    """
     if not os.path.exists(directory_path):
         os.makedirs(directory_path)
         return True
@@ -321,17 +331,33 @@ def render_in_one(
 
 
 def get_mask_from_cidr(cidr):
+    """
+    Given a subnet in cidr notation return the network mask in dotted notation
+    :param cidr:
+    :return:  mask in dotted notation
+    """
     network = ipaddress.IPv4Network(cidr, strict=False)
     return str(network.netmask)
 
 
 def get_first_ip(cidr):
+    """
+    Given a subnet in cidr notation return the first valid IP
+    :param cidr:
+    :return: First valid IP
+    """
     network = ipaddress.IPv4Network(cidr, strict=False)
     first_ip = network.network_address + 1
     return str(first_ip)
 
 
 def get_fourth_ip(cidr):
+    """
+    Given a subnet in cidr notation return the fourth valid IP
+    Note: this should really just be one function which takes in the offset from the network
+    :param cidr:
+    :return:
+    """
     network = ipaddress.IPv4Network(cidr, strict=False)
     fourth_ip = next(itertools.islice(network.hosts(), 3, 4), None)
     return str(fourth_ip) if fourth_ip else None
@@ -371,15 +397,17 @@ def calculate_future_business_date(business_days):
 
 
 def create_std_cr_snow(snow_dict):
+    """
+    Example of function using Vault for SNOW creds
+    :param snow_dict:
+    :return:
+    """
 
     VAULT_ADDR = "http://127.0.0.1:8200"
     ROOT_TOKEN = "hvs.SR1x9c4pdbFFxr2L6BjxBJL9"
 
     # ServiceNow instance details
     username, password, snow_instance = get_secret(VAULT_ADDR, ROOT_TOKEN)
-    # print(username)
-    # print(password)
-    # print(snow_instance)
 
     pprint.pp(snow_dict)
 
@@ -467,7 +495,12 @@ def get_username():
 
 
 def replace_special_chars(text):
-    # Replace spaces and special characters with underscores
+    """
+    eplace spaces and special characters in the provided text string with underscores
+    :param text:
+    :return: string with underscores replacing anything that is not alphanumeric.
+    """
+
     return re.sub(r"[^a-zA-Z0-9]", "_", text)
 
 
@@ -497,8 +530,11 @@ def get_os_env(var_name):
 
 def try_sq_rest_call(uri_path, url_options, debug=False):
     """
-    SuzieQ API REST Call
-
+    REUSABLE BASE SuzieQ API REST Call
+    :param uri_path:
+    :param url_options:
+    :param debug:
+    :return:  complete response
     """
 
     # Load Environment variables from .env containing Suzieq REST API Token
@@ -545,6 +581,10 @@ def try_sq_rest_call(uri_path, url_options, debug=False):
 
 
 def get_namespace_list():
+    """
+    This function pulls all the namespaces available in SuzieQ.
+    :return: a list of the namesapces and the full response
+    """
 
     # Initialize
     namespace_list = list()
@@ -564,14 +604,21 @@ def get_namespace_list():
         print(f"Status Code: {ns_response.status_code}")
         print(f"Reason: {ns_response.reason}")
         print(ns_response.json())
-        print("Please make sure you have a .env file (rename the .env_sample) at the root of the repository "
-              "with the correct API Token.")
+        print(
+            "Please make sure you have a .env file (rename the .env_sample) at the root of the repository "
+            "with the correct API Token."
+        )
         print("Token can be obtained from any of the instructors.")
 
     return namespace_list, ns_response
 
 
 def get_device_list(nsx):
+    """
+    This function pulls the device data for a namespace in SuzieQ.
+    :param nsx:
+    :return: a list of the devices in the namespace and the complete response
+    """
 
     # Initialize
     device_list = list()
@@ -597,6 +644,13 @@ def get_device_list(nsx):
 
 
 def get_topology(namespace, via="lldp"):
+    """
+    This function pulls the LLDP topology data for a namespace in SuzieQ.
+
+    :param namespace:
+    :param via:
+    :return: the complete API response
+    """
 
     URI_PATH = "/api/v2/topology/show"
     URL_OPTIONS = (
@@ -691,6 +745,14 @@ def get_extdb(extdbx, nsx, debug=False):
 
 
 def find_vlan_on_switch(vlanx, switchx):
+    """
+    Call to SuzieQ Vlan how for a switch and vlan.
+
+    :param vlanx:
+    :param switchx:
+    :return: a boolean indicating true if the vlan is configured on the switch and false otherwise,
+             and the complete API response
+    """
     vlan_configured_on_sw = False
 
     URI_PATH = "/api/v2/vlan/show"
@@ -712,7 +774,14 @@ def find_vlan_on_switch(vlanx, switchx):
 
 
 def check_stp_switch(vlanx, switch):
-    """ """
+    """
+    Call to SuzieQ STP show for a switch and vlan.
+
+    :param vlanx:
+    :param switch:
+    :return: a boolean indicating true if the vlan has root on the switch and false otherwise,
+             and the complete API response
+    """
 
     # Set Boolean indicating the provided vlan has root on an interface
     vlan_has_stp_root = False
@@ -735,14 +804,30 @@ def check_stp_switch(vlanx, switch):
 
 
 def file_timestamp(dat_tim_delim="-"):
+    """
+    Returns the current time in a format suitable for file timestamps
+    :return:
+    """
     return datetime.datetime.now().strftime(f"%Y%m%d{dat_tim_delim}%H%M%S")
 
 
 def human_readable_timestamp():
+    """
+    Returns the current time in a human readable format suitable for documentation
+    :return:
+    """
     return datetime.datetime.now().strftime("%B %d, %Y at %I:%M %p")
 
 
 def extract_excel_to_csv(file_path):
+    """
+    Function which takes in an EXCEL file with one or more tabs and extracts each tab into a CSV.
+    Used to extract the design data for the 08 Capstone project.
+
+    :param file_path:
+    :return:
+    """
+
     # Load the workbook
     workbook = openpyxl.load_workbook(file_path)
 
@@ -888,10 +973,14 @@ def get_template_selection(options):
             print("Please enter a valid number.")
 
 
-def get_neo_data(start_date=None, end_date=None, api_key='YOUR_API_KEY'):
+def get_neo_data(start_date=None, end_date=None, api_key="YOUR_API_KEY"):
     """
-    a python function which extracts near earth orbit objects from a nasa data set
+    A python function which extracts near earth orbit objects from a nasa data set
     nd returns a JSON file with near earth objects for today's date
+
+    Requires an API Key available for free at the URL below:
+    https://api.nasa.gov/
+
     :param start_date:
     :param end_date:
     :param api_key:
@@ -899,7 +988,7 @@ def get_neo_data(start_date=None, end_date=None, api_key='YOUR_API_KEY'):
     """
     # If no dates provided, use today's date
     if not start_date:
-        start_date = datetime.datetime.now().strftime('%Y-%m-%d')
+        start_date = datetime.datetime.now().strftime("%Y-%m-%d")
     if not end_date:
         end_date = start_date
 
@@ -916,7 +1005,7 @@ def get_neo_data(start_date=None, end_date=None, api_key='YOUR_API_KEY'):
 
         # Write the data to a JSON file
         filename = f"nasa_near_earth_objects_{file_timestamp()}.json"
-        with open(filename, 'w') as f:
+        with open(filename, "w") as f:
             json.dump(data, f, indent=2)
 
         print(f"NEO data saved to {filename}")
@@ -934,11 +1023,11 @@ def json_to_yaml(input_json_file, output_yaml_file):
     :return:
     """
     # Read the JSON file
-    with open(input_json_file, 'r') as json_file:
+    with open(input_json_file, "r") as json_file:
         json_data = json.load(json_file)
 
     # Write the data to a YAML file
-    with open(output_yaml_file, 'w') as yaml_file:
+    with open(output_yaml_file, "w") as yaml_file:
         yaml.dump(json_data, yaml_file, default_flow_style=False)
 
     print(f"\nSuccessfully converted {input_json_file} to {output_yaml_file}\n")
@@ -955,7 +1044,6 @@ def sort_filenames_by_length(filenames):
     list: A new list of filenames sorted by their length
     """
     return sorted(filenames, key=len)
-
 
 
 def main():
