@@ -56,7 +56,7 @@ def main():
     with open(fp, 'w') as f:
         f.write(combined_config)
 
-    print("\nCombined configuration has been saved to a text file.")
+    print("\nCombined configuration has been saved as:")
     print(fp)
 
 
