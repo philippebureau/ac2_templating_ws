@@ -82,8 +82,8 @@ def main():
         f.write(user_interface_config)
         f.write(tacacs_server_config)
 
-    print("\nConfigurations using the Modular Inheritance/Extends strategy have been saved to text files.")
-
+    print("\nCombined configuration has been saved as:")
+    print(fp)
 
 # Standard call to the main() function.
 if __name__ == '__main__':
