@@ -141,28 +141,33 @@ def main():
     :return:
     """
 
-    # One option could be to have the user pick from a valid list of namespaces
-    namespaces, full_response = utils.get_namespace_list()
-
-    response = utils.get_topology(arguments.namespace)
-    if response.ok:
-        # Saving the response so we hae a local copy of the data, just in case
-        if response.json():
-            utils.save_json_payload(response.json(), f"topology_response_from_suzieq_{utils.file_timestamp()}.json")
+    if arguments.local:
+        local_filename = "topology_response_from_suzieq.json"
+        print(f"\nUsing JSON payload in local file {local_filename}")
+        payload = utils.load_json(local_filename)
     else:
-        print(response)
-        exit(
-            f"\n\nAborting Run! Cannot access SuzieQ API! Status Code: "
-            f"{response.status_code} Reason: {response.reason} "
-            f"\nPlease make sure you have an .env file at the top level of your repository and a valdi token in "
-            f"the environment variable SQ_API_TOKEN. \nRename .env_sample to .env\n\n"
-        )
+        # Get topology for the provided namespace from SuzieQ REST
+        response = utils.get_topology(arguments.namespace)
+        if response.ok:
+            # Saving the response so we hae a local copy of the data, just in case
+            if response.json():
+                utils.save_json_payload(response.json(), f"topology_response_from_suzieq_{utils.file_timestamp()}.json")
+        else:
+            print(response)
+            exit(
+                f"\n\nAborting Run! Cannot access SuzieQ API! Status Code: "
+                f"{response.status_code} Reason: {response.reason} "
+                f"\nPlease make sure you have an .env file at the top level of your repository and a valdi token in "
+                f"the environment variable SQ_API_TOKEN. \nRename .env_sample to .env\n\n"
+            )
+
+        payload = response.json()
 
     # Generate the topology data using the local function generate_topology
-    topology_data = generate_topology(response.json())
+    topology_data = generate_topology(payload)
 
     # Render the Jinja2 template
-    clab_topology = utils.render_in_one("lldp_topology_template.j2", topology_data, search_dir=".")
+    clab_topology = utils.render_in_one("lldp_topology_template.j2", topology_data, search_dir="templates")
 
     # Check to make sure the topology has data (nodes and links)
     if topology_data['nodes'] and topology_data['links']:
@@ -216,6 +221,14 @@ if __name__ == "__main__":
         help="Defines the namespace from which to pull topology data from SuzieQ. Default: 'GDL_Campus'",
         action="store",
         default="GDL_Campus",
+    )
+
+    parser.add_argument(
+        "-l",
+        "--local",
+        help="Use local data file. Default: False",
+        action="store_true",
+        default=False,
     )
 
     arguments = parser.parse_args()
